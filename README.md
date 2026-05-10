@@ -82,7 +82,7 @@ It applies various known methods such as GTD, Kanban and Lists. Within the user 
 ### Built With
 
 * [![Preact][Preact.js]][Preact-url]
-* [![Baseui][Base UI]][Baseui-url]
+* [![Baseui][BaseUI]][Baseui-url]
 * [![Biome][Biome]][Biome-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -191,6 +191,7 @@ Distributed under the **MIT License**. See `LICENSE.txt` for more information.
 NebSpacefarer - [@Nebspacefarer](https://bsky.app/profile/nebspacefarer.bsky.social) - contact .at. nebspacefarer .dot. com
 
 Project Link: [https://github.com/NebSpacefarer/sprout](https://github.com/NebSpacefarer/sprout)
+
 Discord Community: [https://discord.com/invite/...](https://discord.com/invite/...)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
