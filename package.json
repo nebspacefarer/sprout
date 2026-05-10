@@ -1,0 +1,27 @@
+{
+  "name": "sprout",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rsbuild build",
+    "check": "biome check --write",
+    "dev": "rsbuild --open",
+    "format": "biome format --write",
+    "preview": "rsbuild preview"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.4.1",
+    "@nebula-db/nebula-db": "^0.4.6",
+    "@preact/signals": "^2.9.0",
+    "deepsignal": "^1.6.0",
+    "preact": "^10.29.1",
+    "wouter": "^3.9.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.13",
+    "@rsbuild/core": "^2.0.5",
+    "@rsbuild/plugin-preact": "^1.7.2",
+    "typescript": "^6.0.3"
+  }
+}
