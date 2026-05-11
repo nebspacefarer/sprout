@@ -1,12 +1,25 @@
-import './App.css';
+import "./App.css";
+import { Route, Switch } from "wouter";
+import HomePage from "#pages/HomePage";
+import Footer from "./Footer";
+import Sidebar from "./Sidebar";
+import Topbar from "./Topbar";
 
 const App = () => {
-  return (
-    <div className="content">
-      <h1>Rsbuild with Preact</h1>
-      <p>Start building amazing things with Rsbuild.</p>
-    </div>
-  );
+	return (
+		<main className="root">
+			<div className="flex flex-1">
+				<Sidebar />
+				<div className="flex-1">
+					<Topbar />
+					<Switch>
+						<Route path="/" component={HomePage} />
+					</Switch>
+				</div>
+			</div>
+			<Footer />
+		</main>
+	);
 };
 
 export default App;
