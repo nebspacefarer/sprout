@@ -5,6 +5,6 @@
 body,
 #root,
 main {
-	@apply flex min-h-screen h-full text-pretty bg-background important:text-foreground text-base overflow-y-clip relative;
+	@apply flex min-h-screen h-full text-pretty bg-background important:text-foreground  overflow-y-clip relative;
 	color: currentColor;
 }
