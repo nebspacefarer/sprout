@@ -12,12 +12,12 @@
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.4.1",
+		"@deepsignal/preact": "^4.1.0",
 		"@nebula-db/nebula-db": "^0.4.6",
 		"@preact/signals": "^2.9.0",
 		"@tabler/icons-preact": "^3.44.0",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
-		"deepsignal": "^1.6.0",
 		"preact": "^10.29.1",
 		"tailwind-merge": "^3.5.0",
 		"wouter": "^3.9.0"

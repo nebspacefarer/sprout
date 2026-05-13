@@ -11,6 +11,9 @@ importers:
       '@base-ui/react':
         specifier: ^1.4.1
         version: 1.4.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@deepsignal/preact':
+        specifier: ^4.1.0
+        version: 4.1.0(@preact/signals-core@1.14.1)(@preact/signals@2.9.0(preact@10.29.1))
       '@nebula-db/nebula-db':
         specifier: ^0.4.6
         version: 0.4.6
@@ -26,9 +29,6 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      deepsignal:
-        specifier: ^1.6.0
-        version: 1.6.0(@preact/signals-core@1.14.1)(@preact/signals@2.9.0(preact@10.29.1))(preact@10.29.1)
       preact:
         specifier: ^10.29.1
         version: 10.29.1
@@ -156,6 +156,16 @@ packages:
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [win32]
+
+  '@deepsignal/core@4.1.0':
+    resolution: {integrity: sha512-JzN2XYybK5voeJ5SG439fKnJBvjRNHUO50h9xpYVQGIP9N7fAzSXsYl6rBdG9cdxVotnZ32PWSQQAiLUpOD44Q==}
+    peerDependencies:
+      '@preact/signals-core': 1.x.x
+
+  '@deepsignal/preact@4.1.0':
+    resolution: {integrity: sha512-s53bV4okeS1A4a2Van83xUsTIVk4EaK22xpFCqQjbI5AI+jz+Tlo9goEJxG1cPcCQIqRGZGCfwgXmnGqodODOQ==}
+    peerDependencies:
+      '@preact/signals': 1.x.x
 
   '@emnapi/core@1.10.0':
     resolution: {integrity: sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==}
@@ -828,23 +838,6 @@ packages:
     resolution: {integrity: sha512-0LrrStPOdJj+SPCCrGhzryycLjwcgUSHBtxNA8aIDxf0GLsRh1cKYhB00Gd1lDOS4yGH69+SNn13+TWbVHETFQ==}
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0, npm: '>=7.0.0'}
 
-  deepsignal@1.6.0:
-    resolution: {integrity: sha512-oplhhOSfBRKmx96B0PzbhRaX2W7iDpH6BEqvyGLIZPO2pdHQD+/P3u4Z8wi/sKXjCE7ht8C7ULTEzLSJbgwccA==}
-    peerDependencies:
-      '@preact/signals': ^1.1.4 || ^2.0.0
-      '@preact/signals-core': ^1.5.1
-      '@preact/signals-react': ^1.3.8 || ^2.0.0 || ^3.0.0
-      preact: ^10.16.0
-    peerDependenciesMeta:
-      '@preact/signals':
-        optional: true
-      '@preact/signals-core':
-        optional: true
-      '@preact/signals-react':
-        optional: true
-      preact:
-        optional: true
-
   defu@6.1.7:
     resolution: {integrity: sha512-7z22QmUWiQ/2d0KkdYmANbRUVABpZ9SNYyH5vx6PZ+nE5bcC0l7uFvEfHlyld/HcGBFTL536ClDt3DEcSlEJAQ==}
 
@@ -1285,6 +1278,17 @@ snapshots:
 
   '@biomejs/cli-win32-x64@2.4.13':
     optional: true
+
+  '@deepsignal/core@4.1.0(@preact/signals-core@1.14.1)':
+    dependencies:
+      '@preact/signals-core': 1.14.1
+
+  '@deepsignal/preact@4.1.0(@preact/signals-core@1.14.1)(@preact/signals@2.9.0(preact@10.29.1))':
+    dependencies:
+      '@deepsignal/core': 4.1.0(@preact/signals-core@1.14.1)
+      '@preact/signals': 2.9.0(preact@10.29.1)
+    transitivePeerDependencies:
+      - '@preact/signals-core'
 
   '@emnapi/core@1.10.0':
     dependencies:
@@ -1892,12 +1896,6 @@ snapshots:
   csso@5.0.5:
     dependencies:
       css-tree: 2.2.1
-
-  deepsignal@1.6.0(@preact/signals-core@1.14.1)(@preact/signals@2.9.0(preact@10.29.1))(preact@10.29.1):
-    optionalDependencies:
-      '@preact/signals': 2.9.0(preact@10.29.1)
-      '@preact/signals-core': 1.14.1
-      preact: 10.29.1
 
   defu@6.1.7: {}
 
