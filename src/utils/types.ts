@@ -1,16 +1,21 @@
 export type Permission = {
-	id: string;
 	userId: string;
 	level: number;
 };
 
+export type Tag = {
+	name: string;
+	color: string;
+};
+
 export type Project = {
-	id: string;
+	id?: string;
+	icon: string;
 	title: string;
 	desc: string;
-	tags: string;
-	status: string[];
-	dueAt: string;
+	tags: Tag[];
+	status: string;
+	tasksStatus: string[];
 	createdAt: string;
 	updatedAt: string;
 	permissions: Permission[];
@@ -27,11 +32,13 @@ export type Task = {
 	content: string;
 	projectId: string;
 	assigneesId: string[];
+	tags: Tag[];
 	status: number;
 	priority: number;
 	timeTracking: TimeTrack[];
 	createdAt: string;
 	updatedAt: string;
+	dueAt: string;
 	userId: string;
 };
 
