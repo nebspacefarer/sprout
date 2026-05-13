@@ -23,6 +23,8 @@ export default defineConfig({
 				accentForeground: "#222222",
 
 				foreground: "#dfdfdf",
+				danger: "#F76363",
+				success: "#A8FF78",
 
 				muted: "#5a5961",
 				border: "#2c2b34",
