@@ -1,4 +1,5 @@
 import { Separator } from "@base-ui/react/separator";
+import { useSignal } from "@preact/signals";
 import {
 	IconLayoutGridAdd,
 	IconMailPlus,
@@ -12,6 +13,8 @@ import Link from "./components/ui/Link";
 import Text from "./components/ui/Text";
 
 export default function Sidebar() {
+	const projectDialogOpen = useSignal<boolean>(false);
+
 	return (
 		<div className={cn("flex flex-col bg-crust p-sm")}>
 			<div className="flex-1">
@@ -36,8 +39,14 @@ export default function Sidebar() {
 						</Link>
 
 						<AddProjectDialog
+							open={projectDialogOpen}
 							dialogTrigger={
-								<Button className="opacity-0 transition-all group-hover:opacity-100">
+								<Button
+									className="opacity-0 transition-all group-hover:opacity-100"
+									onClick={() =>
+										(projectDialogOpen.value = true)
+									}
+								>
 									<IconLayoutGridAdd size={22} />
 								</Button>
 							}
