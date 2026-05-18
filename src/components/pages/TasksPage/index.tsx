@@ -80,10 +80,28 @@ export default function TasksPage() {
 
         const data = await result.json();
 
-        projects[addTaskProjectField.value].tasks.value = [
-            ...projects[addTaskProjectField.value].tasks.value,
-            data.task,
-        ];
+        const project = projects.value.find(
+            (p) => p.project._id === addTaskProjectField.value,
+        );
+
+        project.tasks = [...project.tasks, data.task];
+
+        if (
+            projectsSelected.value.find(
+                (p) => p.project._id === project.project._id,
+            )
+        ) {
+            projectsSelected.value = [
+                ...projectsSelected.value.filter(
+                    (p) => p.project._id !== project.project._id,
+                ),
+                project,
+            ];
+        }
+
+        toastManager.add({
+            description: "Task created successfully",
+        });
     }
 
     async function deleteTask(task: Task) {
@@ -95,13 +113,19 @@ export default function TasksPage() {
         const data = await result.json();
 
         if (data.result) {
-            const projectIndex = projects.value.findIndex(
+            const project = projectsSelected.value.find(
                 (p) => p.project._id === task.projectId,
             );
-            projects[projectIndex].tasks.value = [
-                ...projects[projectIndex].tasks.value.filter(
-                    (t: Task) => t._id !== task._id,
+
+            project.tasks = [
+                ...project.tasks.filter((t) => t._id !== task._id),
+            ];
+
+            projectsSelected.value = [
+                ...projectsSelected.value.filter(
+                    (p) => p.project._id !== project.project._id,
                 ),
+                project,
             ];
         }
     }
