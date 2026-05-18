@@ -1,5 +1,9 @@
 import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
-import type { ProjectDocument, TaskDocument } from "../../src/utils/types";
+import type {
+	NoteDocument,
+	ProjectDocument,
+	TaskDocument,
+} from "../../src/utils/types";
 import type { RequestBody, RequestParamsName } from "../utils/requestTypes";
 
 const projects: FastifyPluginAsync = async (fastify): Promise<void> => {
@@ -35,7 +39,15 @@ const projects: FastifyPluginAsync = async (fastify): Promise<void> => {
 					.equalTo("projectId", project._id)
 					.find();
 
-				return reply.code(200).send({ project: project, tasks: tasks });
+				const notes: NoteDocument[] = fastify
+					.db()
+					.notes.query()
+					.equalTo("projectId", project._id)
+					.find();
+
+				return reply
+					.code(200)
+					.send({ project: project, tasks: tasks, notes: notes });
 			}
 
 			return reply.code(404).send({ error: "Not found." });

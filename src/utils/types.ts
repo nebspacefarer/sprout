@@ -46,6 +46,17 @@ export type Task = {
 };
 export type TaskDocument = NeboaDocument<Task>;
 
+export type Note = {
+	_id?: string;
+	title: string;
+	content: string;
+	projectId: string;
+	tags?: Tag[];
+	createdAt: string;
+	updatedAt: string;
+};
+export type NoteDocument = NeboaDocument<Note>;
+
 export type User = {
 	_id?: string;
 	username: string;

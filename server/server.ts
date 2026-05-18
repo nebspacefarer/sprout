@@ -2,6 +2,7 @@ import cors from "@fastify/cors";
 import Fastify from "fastify";
 import db from "./plugins/db";
 import health from "./routes/health";
+import notes from "./routes/notes";
 import projects from "./routes/projects";
 import tasks from "./routes/tasks";
 
@@ -18,6 +19,7 @@ fastify.register(db);
 fastify.register(health);
 fastify.register(projects);
 fastify.register(tasks);
+fastify.register(notes);
 
 // Decorate Reply with default Content-Type
 fastify.addHook("onSend", (_request, reply, _payload, done) => {
