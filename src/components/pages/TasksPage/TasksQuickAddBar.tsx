@@ -33,6 +33,15 @@ export default function TasksQuickAddBar({
                     ))}
                 </MenuSelect>
 
+                <Text>
+                    {addTaskProjectField.value &&
+                        "in: " +
+                        projects.value?.find(
+                            (p: ProjectData) =>
+                                p.project._id === addTaskProjectField.value,
+                        ).project.title}
+                </Text>
+
                 <Field
                     fieldTitle=""
                     placeholder="Quick Add Task..."
