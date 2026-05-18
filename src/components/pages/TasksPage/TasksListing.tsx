@@ -1,4 +1,4 @@
-import type { Signal } from "@preact/signals";
+import { type Signal, useSignal } from "@preact/signals";
 import {
     IconCheck,
     IconClockPlay,
@@ -7,46 +7,89 @@ import {
     IconNote,
     IconTrashX,
 } from "@tabler/icons-preact";
+import { useEffect } from "preact/hooks";
 import Button from "#ui/Button";
 import Card from "#ui/Card";
 import { MenuSelect, MenuSelectItem } from "#ui/MenuSelect";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { cn } from "#utils/cn";
-import type { Task } from "#utils/types";
+import type { ProjectData, Task } from "#utils/types";
 
 export default function TasksListing({
     layout,
-    tasks,
+    projectsSelected,
     deleteTask,
     taskDialogOpen,
     editedTask,
 }: {
     layout: Signal<string>;
-    tasks: Signal<Task[]>;
-    deleteTask: (_id: string) => void;
+    projectsSelected: Signal<ProjectData[]>;
+    deleteTask: (task: Task) => void;
     taskDialogOpen: Signal<boolean>;
     editedTask: Signal<Task>;
 }) {
+    const tasks = useSignal<Task[]>([]);
+
+    useEffect(() => {
+        function getTasks() {
+            tasks.value = [];
+
+            for (const projectData of projectsSelected.value) {
+                tasks.value = [...tasks.value, ...projectData.tasks];
+            }
+
+            console.log(tasks.value);
+        }
+        getTasks();
+    }, [projectsSelected.value]);
+
     return (
-        <div className="flex flex-col bg-crust">
-            <div className="w-full rounded-md bg-primary px-xs py-1 text-primary-foreground">
-                <Text className="font-semibold text-lg">Title</Text>
-            </div>
+        <div className="flex flex-col gap-sm bg-crust">
             <div>
-                {tasks.value?.map((task: Task) => {
-                    switch (layout.value) {
-                        default:
-                            return (
-                                <SectionTask
-                                    task={task}
-                                    deleteTask={(id) => deleteTask(id)}
-                                    taskDialogOpen={taskDialogOpen}
-                                    editedTask={editedTask}
-                                />
-                            );
-                    }
-                })}
+                <div className="w-full rounded-md bg-primary px-xs py-1 text-primary-foreground">
+                    <Text className="font-semibold text-lg">Todo</Text>
+                </div>
+                <div>
+                    {tasks.value
+                        ?.filter((t) => t.status === 0)
+                        .map((task: Task) => {
+                            switch (layout.value) {
+                                default:
+                                    return (
+                                        <SectionTask
+                                            task={task}
+                                            deleteTask={() => deleteTask(task)}
+                                            taskDialogOpen={taskDialogOpen}
+                                            editedTask={editedTask}
+                                        />
+                                    );
+                            }
+                        })}
+                </div>
+            </div>
+
+            <div>
+                <div className="w-full rounded-md bg-primary px-xs py-1 text-primary-foreground">
+                    <Text className="font-semibold text-lg">In Progress</Text>
+                </div>
+                <div>
+                    {tasks.value
+                        ?.filter((t) => t.status === 1)
+                        .map((task: Task) => {
+                            switch (layout.value) {
+                                default:
+                                    return (
+                                        <SectionTask
+                                            task={task}
+                                            deleteTask={() => deleteTask(task)}
+                                            taskDialogOpen={taskDialogOpen}
+                                            editedTask={editedTask}
+                                        />
+                                    );
+                            }
+                        })}
+                </div>
             </div>
         </div>
     );

@@ -1,26 +1,23 @@
-import { Separator } from "@base-ui/react";
 import { useDeepSignal } from "@deepsignal/preact";
 import { useSignal } from "@preact/signals";
-import { IconAdjustmentsCog } from "@tabler/icons-preact";
+import { IconListDetails } from "@tabler/icons-preact";
 import { useEffect } from "preact/hooks";
-import { useParams } from "wouter";
-import type { Project, Task } from "#utils/types";
+import PageTitle from "src/components/PageTitle";
+import { useSearch } from "wouter";
+import type { ProjectData, Task } from "#utils/types";
 import EditTaskDialog from "../../dialogs/EditTask";
-import Avatar from "../../ui/Avatar";
-import Button from "../../ui/Button";
-import Show from "../../ui/Show";
-import Text from "../../ui/Text";
 import TasksListing from "./TasksListing";
 import TasksQuickAddBar from "./TasksQuickAddBar";
 import TasksToolbar from "./TasksToolbar";
 
 export default function TasksPage() {
-    const params = useParams<{ name: string }>();
-    const project = useSignal<Project | null>(null);
-    const tasks = useSignal<Task[]>([]);
+    const _searchUrl = useSearch();
+    const projects = useSignal<ProjectData[]>([]);
+    const _tasks = useSignal<Task[]>([]);
 
+    const projectsSelected = useSignal<ProjectData[]>([]);
     const search = useSignal<string>("");
-    const checked = useDeepSignal({
+    const checkedFields = useDeepSignal({
         assignees: true,
         dueAt: true,
         priority: true,
@@ -29,31 +26,30 @@ export default function TasksPage() {
     });
     const layout = useSignal<string>("section");
     const sort = useSignal<string>("createdAt");
+    const addTaskProjectField = useSignal<string>("");
     const addTaskField = useSignal<string>("");
 
     const taskDialogOpen = useSignal<boolean>(false);
     const editedTask = useSignal<Task>(null);
 
     useEffect(() => {
-        async function getProject() {
-            const result = await fetch(
-                `http://localhost:3536/api/projects/${params.name}`,
-            );
+        async function getProjects() {
+            const result = await fetch(`http://localhost:3536/api/projects`);
             const data = await result.json();
 
-            project.value = data.project;
-            tasks.value = data.tasks;
+            projects.value = data.projects;
+            projectsSelected.value = [...data.projects];
 
-            console.log(data.tasks);
+            console.log(data);
         }
 
-        getProject();
+        getProjects();
     }, []);
 
     async function createQuickTask() {
         const task: Task = {
             title: addTaskField.value,
-            projectId: project.value._id,
+            projectId: addTaskProjectField.value,
             userId: "0",
             priority: 1,
             status: 0,
@@ -71,77 +67,68 @@ export default function TasksPage() {
 
         console.log(data);
 
-        tasks.value = [...tasks.value, data.task];
+        projects[addTaskProjectField.value].tasks.value = [
+            ...projects[addTaskProjectField.value].tasks.value,
+            data.task,
+        ];
     }
 
-    async function deleteTask(_id: string) {
+    async function deleteTask(task: Task) {
         const result = await fetch("http://localhost:3536/api/tasks", {
             method: "DELETE",
-            body: JSON.stringify({ _id: _id }),
+            body: JSON.stringify({ _id: task._id }),
         });
 
         const data = await result.json();
 
         if (data.result) {
-            tasks.value = [...tasks.value.filter((task) => task._id !== _id)];
+            const projectIndex = projects.value.findIndex(
+                (p) => p.project._id === task.projectId,
+            );
+            projects[projectIndex].tasks.value = [
+                ...projects[projectIndex].tasks.value.filter(
+                    (t: Task) => t._id !== task._id,
+                ),
+            ];
         }
     }
 
     return (
         <div>
-            <Show when={project.value !== null}>
-                <div className="flex flex-col gap-sm">
-                    <div className="flex items-center justify-between gap-sm">
-                        <div className="flex items-center gap-xs">
-                            <Avatar
-                                src={project.value?.icon}
-                                fallback={project.value?.title}
-                                className="size-16"
-                            />
-                            <Text className="border-primary border-b-3 font-semibold text-2xl">
-                                {project.value?.title}
-                            </Text>
-                            <Text>{project.value?.desc}</Text>
-                        </div>
+            <div className="flex flex-col gap-sm">
+                <PageTitle pageIcon={<IconListDetails />} pageTitle="Tasks" />
 
-                        <Button className="size-10">
-                            <IconAdjustmentsCog size={20} />
-                        </Button>
-                    </div>
-
-                    <Separator
-                        orientation="horizontal"
-                        className="h-px bg-border"
-                    />
-
-                    <TasksToolbar
-                        search={search}
-                        checked={checked}
-                        sort={sort}
-                    />
-
-                    <div className="flex flex-col gap-xs">
-                        <TasksQuickAddBar
-                            addTaskField={addTaskField}
-                            createQuickTask={createQuickTask}
-                        />
-
-                        <TasksListing
-                            layout={layout}
-                            tasks={tasks}
-                            taskDialogOpen={taskDialogOpen}
-                            deleteTask={deleteTask}
-                            editedTask={editedTask}
-                        />
-                    </div>
-                </div>
-
-                <EditTaskDialog
-                    open={taskDialogOpen}
-                    task={editedTask}
-                    tasks={tasks}
+                <TasksToolbar
+                    projectsSelected={projectsSelected}
+                    projects={projects}
+                    search={search}
+                    checkedFields={checkedFields}
+                    sort={sort}
                 />
-            </Show>
+
+                <div className="flex flex-col gap-xs">
+                    <TasksQuickAddBar
+                        projects={projects}
+                        addTaskProjectField={addTaskProjectField}
+                        addTaskField={addTaskField}
+                        createQuickTask={createQuickTask}
+                    />
+
+                    <TasksListing
+                        layout={layout}
+                        projectsSelected={projectsSelected}
+                        taskDialogOpen={taskDialogOpen}
+                        deleteTask={deleteTask}
+                        editedTask={editedTask}
+                    />
+                </div>
+            </div>
+
+            <EditTaskDialog
+                open={taskDialogOpen}
+                projectsSelected={projectsSelected}
+                task={editedTask}
+            />
         </div>
     );
 }
