@@ -30,6 +30,7 @@ export function MenuCheckbox(props: MenuCheckboxProps) {
 
 interface MenuCheckboxItemProps extends BaseHTMLAttributes<HTMLBaseElement> {
     checked: Signal<boolean>;
+    onClick?: (event: MouseEvent) => void;
 }
 
 export function MenuCheckboxItem(props: MenuCheckboxItemProps) {
@@ -41,6 +42,7 @@ export function MenuCheckboxItem(props: MenuCheckboxItemProps) {
                 "grid min-w-40 grid-cols-6 items-center gap-xs p-xs text-sm leading-4 outline-hidden data-[highlighted]:relative data-[highlighted]:z-0 data-[disabled]:text-muted data-[highlighted]:text-foreground data-[disabled]:data-[highlighted]:before:bg-border data-[highlighted]:before:absolute data-[highlighted]:before:inset-x-1 data-[highlighted]:before:inset-y-0 data-[highlighted]:before:z-[-1] data-[highlighted]:before:rounded-sm data-[highlighted]:before:bg-border",
                 props.checked.value && "text-foreground",
             )}
+            onClick={(event) => props.onClick(event)}
         >
             <div className="col-span-1">
                 <Menu.CheckboxItemIndicator>
