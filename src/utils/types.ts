@@ -1,3 +1,5 @@
+import type { NeboaDocument } from "neboa";
+
 export type Permission = {
 	userId: string;
 	level: number;
@@ -9,17 +11,18 @@ export type Tag = {
 };
 
 export type Project = {
-	id?: string;
+	_id?: string;
 	icon: string;
 	title: string;
-	desc: string;
-	tags: Tag[];
+	desc?: string;
+	tags?: Tag[];
 	status: string;
 	tasksStatus: string[];
 	createdAt: string;
 	updatedAt: string;
 	permissions: Permission[];
 };
+export type ProjectDocument = NeboaDocument<Project>;
 
 export type TimeTrack = {
 	userId: string;
@@ -27,23 +30,24 @@ export type TimeTrack = {
 };
 
 export type Task = {
-	id: string;
+	_id?: string;
 	title: string;
-	content: string;
+	content?: string;
 	projectId: string;
-	assigneesId: string[];
-	tags: Tag[];
+	assigneesId?: string[];
+	tags?: Tag[];
 	status: number;
 	priority: number;
 	timeTracking: TimeTrack[];
 	createdAt: string;
 	updatedAt: string;
-	dueAt: string;
+	dueAt?: string;
 	userId: string;
 };
+export type TaskDocument = NeboaDocument<Task>;
 
 export type User = {
-	id: string;
+	_id?: string;
 	username: string;
 	password: string;
 	avatar: string;
@@ -52,3 +56,4 @@ export type User = {
 	loggedAt: string;
 	roles: string[];
 };
+export type UserDocument = NeboaDocument<User>;
