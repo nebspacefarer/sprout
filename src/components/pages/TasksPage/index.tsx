@@ -38,8 +38,6 @@ export default function TasksPage() {
 
             projects.value = data.projects;
             projectsSelected.value = [...data.projects];
-
-            console.log(data);
         }
 
         getProjects();
@@ -57,14 +55,19 @@ export default function TasksPage() {
             updatedAt: new Date().toISOString(),
         };
 
+        if (task.title.length === 0) {
+            return;
+        }
+        if (task.projectId.length === 0) {
+            return;
+        }
+
         const result = await fetch("http://localhost:3536/api/tasks", {
             method: "POST",
             body: JSON.stringify(task),
         });
 
         const data = await result.json();
-
-        console.log(data);
 
         projects[addTaskProjectField.value].tasks.value = [
             ...projects[addTaskProjectField.value].tasks.value,
