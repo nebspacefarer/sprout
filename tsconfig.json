@@ -1,6 +1,9 @@
 {
 	"compilerOptions": {
-		"lib": ["DOM", "ES2020"],
+		"lib": [
+			"DOM",
+			"ES2020"
+		],
 		"jsx": "react-jsx",
 		"target": "ES2020",
 		"noEmit": true,
@@ -19,12 +22,27 @@
 		/* Shortcuts */
 		"baseUrl": ".",
 		"paths": {
-			"react": ["./node_modules/preact/compat/"],
-			"react-dom": ["./node_modules/preact/compat/"],
-			"#primitives/*": ["./src/components/primitives/*"],
-			"#utils/*": ["./src/utils/*"],
-			"#pages/*": ["./src/components/pages/*"]
+			"react": [
+				"./node_modules/preact/compat/"
+			],
+			"react-dom": [
+				"./node_modules/preact/compat/"
+			],
+			"#primitives/*": [
+				"./src/components/primitives/*"
+			],
+			"#utils/*": [
+				"./src/utils/*"
+			],
+			"#pages/*": [
+				"./src/components/pages/*"
+			],
+			"#ui/*": [
+				"./src/components/ui/*"
+			]
 		}
 	},
-	"include": ["src"]
+	"include": [
+		"src"
+	]
 }

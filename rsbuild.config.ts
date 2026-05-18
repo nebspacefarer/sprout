@@ -46,6 +46,7 @@ export default defineConfig({
 			"#primitives": "./src/components/primitives",
 			"#utils": "./src/utils",
 			"#pages": "./src/components/pages",
+			"#ui": "./src/components/ui",
 		},
 	},
 });
