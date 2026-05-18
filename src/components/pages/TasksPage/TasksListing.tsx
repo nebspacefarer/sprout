@@ -14,7 +14,8 @@ import { MenuSelect, MenuSelectItem } from "#ui/MenuSelect";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { cn } from "#utils/cn";
-import type { ProjectData, Task } from "#utils/types";
+import { taskStatuses } from "#utils/status";
+import type { ProjectData, Status, Task } from "#utils/types";
 
 export default function TasksListing({
     layout,
@@ -38,58 +39,65 @@ export default function TasksListing({
             for (const projectData of projectsSelected.value) {
                 tasks.value = [...tasks.value, ...projectData.tasks];
             }
-
-            console.log(tasks.value);
         }
         getTasks();
     }, [projectsSelected.value]);
 
     return (
         <div className="flex flex-col gap-sm bg-crust">
-            <div>
-                <div className="w-full rounded-md bg-primary px-xs py-1 text-primary-foreground">
-                    <Text className="font-semibold text-lg">Todo</Text>
-                </div>
-                <div>
-                    {tasks.value
-                        ?.filter((t) => t.status === 0)
-                        .map((task: Task) => {
-                            switch (layout.value) {
-                                default:
-                                    return (
-                                        <SectionTask
-                                            task={task}
-                                            deleteTask={() => deleteTask(task)}
-                                            taskDialogOpen={taskDialogOpen}
-                                            editedTask={editedTask}
-                                        />
-                                    );
-                            }
-                        })}
-                </div>
-            </div>
+            {taskStatuses.map((s) => (
+                <LayoutSection
+                    status={s}
+                    tasks={tasks}
+                    layout={layout}
+                    deleteTask={deleteTask}
+                    editedTask={editedTask}
+                    taskDialogOpen={taskDialogOpen}
+                />
+            ))}
+        </div>
+    );
+}
 
+function LayoutSection({
+    status,
+    layout,
+    tasks,
+    deleteTask,
+    taskDialogOpen,
+    editedTask,
+}: {
+    status: Status;
+    layout: Signal<string>;
+    tasks: Signal<Task[]>;
+    deleteTask: (task: Task) => void;
+    taskDialogOpen: Signal<boolean>;
+    editedTask: Signal<Task>;
+}) {
+    return (
+        <div>
+            <div
+                className="w-full rounded-md px-xs py-1 text-primary-foreground"
+                style={{ backgroundColor: status.color }}
+            >
+                <Text className="font-semibold text-lg">{status.title}</Text>
+            </div>
             <div>
-                <div className="w-full rounded-md bg-primary px-xs py-1 text-primary-foreground">
-                    <Text className="font-semibold text-lg">In Progress</Text>
-                </div>
-                <div>
-                    {tasks.value
-                        ?.filter((t) => t.status === 1)
-                        .map((task: Task) => {
-                            switch (layout.value) {
-                                default:
-                                    return (
-                                        <SectionTask
-                                            task={task}
-                                            deleteTask={() => deleteTask(task)}
-                                            taskDialogOpen={taskDialogOpen}
-                                            editedTask={editedTask}
-                                        />
-                                    );
-                            }
-                        })}
-                </div>
+                {tasks.value
+                    ?.filter((t) => t.status === status.id)
+                    .map((task: Task) => {
+                        switch (layout.value) {
+                            default:
+                                return (
+                                    <SectionTask
+                                        task={task}
+                                        deleteTask={() => deleteTask(task)}
+                                        taskDialogOpen={taskDialogOpen}
+                                        editedTask={editedTask}
+                                    />
+                                );
+                        }
+                    })}
             </div>
         </div>
     );
