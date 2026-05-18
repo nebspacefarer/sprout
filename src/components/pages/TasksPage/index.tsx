@@ -13,7 +13,6 @@ import TasksToolbar from "./TasksToolbar";
 export default function TasksPage() {
     const _searchUrl = useSearch();
     const projects = useSignal<ProjectData[]>([]);
-    const _tasks = useSignal<Task[]>([]);
 
     const projectsSelected = useSignal<ProjectData[]>([]);
     const search = useSignal<string>("");

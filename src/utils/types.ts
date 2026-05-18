@@ -16,7 +16,7 @@ export type Project = {
 	title: string;
 	desc?: string;
 	tags?: Tag[];
-	status: string;
+	status: number;
 	tasksStatus: string[];
 	createdAt: string;
 	updatedAt: string;
@@ -74,3 +74,9 @@ export type User = {
 	roles: string[];
 };
 export type UserDocument = NeboaDocument<User>;
+
+export type Status = {
+	id: number;
+	title: string;
+	color: string;
+};

@@ -1,7 +1,9 @@
 import { type Signal, useSignal } from "@preact/signals";
 import { IconPhotoPlus } from "@tabler/icons-preact";
 import type { BaseHTMLAttributes, ComponentChildren } from "preact";
+import { useLocation } from "wouter";
 import { cn } from "#utils/cn";
+import { projectStatuses } from "#utils/status";
 import type { Project, Tag } from "#utils/types";
 import Avatar from "../ui/Avatar";
 import Button from "../ui/Button";
@@ -18,6 +20,7 @@ interface DialogProps extends BaseHTMLAttributes<HTMLBaseElement> {
 }
 
 export default function AddProjectDialog(props: DialogProps) {
+	const [location, navigate] = useLocation();
 	const error = useSignal<string>("");
 
 	const icon = useSignal<string>("");
@@ -61,19 +64,21 @@ export default function AddProjectDialog(props: DialogProps) {
 
 		const tags: Tag[] = [];
 
-		for (const tagItem of tagsItems.value) {
-			const tag: Tag = {
-				name: tagItem.value,
-				color: "#000000",
-			};
-			tags.push(tag);
+		if (tagsItems.value !== undefined) {
+			for (const tagItem of tagsItems.value) {
+				const tag: Tag = {
+					name: tagItem.value,
+					color: "#000000",
+				};
+				tags.push(tag);
+			}
 		}
 
 		const project: Project = {
 			title: title.value,
 			icon: icon.value,
 			desc: desc.value,
-			status: status.value,
+			status: projectStatuses.find((p) => p.title === status.value).id,
 			tags: tags,
 			tasksStatus: ["Todo", "In Progress", "Done"],
 			createdAt: new Date().toISOString(),
@@ -88,9 +93,10 @@ export default function AddProjectDialog(props: DialogProps) {
 
 		const data = await result.json();
 
-		console.log(data);
-
 		if (data) {
+			if (location === "/projects" || location === "/") {
+				navigate(location, { state: { refresh: true } });
+			}
 			props.open.value = false;
 		}
 	}
@@ -145,14 +151,7 @@ export default function AddProjectDialog(props: DialogProps) {
 				<Select
 					selectTitle="Status*"
 					placeholder="Current status..."
-					items={[
-						"Brainstorm",
-						"Prototyping",
-						"In Progress",
-						"In Review",
-						"Released",
-						"Discontinued",
-					]}
+					items={projectStatuses.map((p) => p.title)}
 					value={status}
 				/>
 				<Combobox

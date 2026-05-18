@@ -10,6 +10,7 @@ export default function Tag(props: TagProps) {
                 "w-fit rounded-xl bg-primary px-xs text-sm",
                 props.className,
             )}
+            style={props.style}
         >
             {props.children}
         </div>

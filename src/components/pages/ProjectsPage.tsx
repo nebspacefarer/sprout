@@ -2,8 +2,10 @@ import { useSignal } from "@preact/signals";
 import { IconDots, IconPlant } from "@tabler/icons-preact";
 import { useEffect } from "preact/hooks";
 import { useLocation } from "wouter";
+import Show from "#ui/Show";
+import { projectStatuses } from "#utils/status";
 import { textToParam } from "#utils/strings";
-import type { Project, ProjectData } from "#utils/types";
+import type { Project, ProjectData, Status } from "#utils/types";
 import PageTitle from "../PageTitle";
 import Avatar from "../ui/Avatar";
 import Button from "../ui/Button";
@@ -44,12 +46,18 @@ export default function ProjectsPage() {
                         <ProjectCard project={project.project} />
                     </Button>
                 ))}
+
+                <Show when={projects.value.length === 0}>
+                    <Text className="text-muted">No project... yet?</Text>
+                </Show>
             </div>
         </div>
     );
 }
 
 function ProjectCard({ project }: { project: Project }) {
+    const status: Status = projectStatuses.find((p) => p.id === project.status);
+
     return (
         <Card>
             <Avatar
@@ -67,10 +75,16 @@ function ProjectCard({ project }: { project: Project }) {
                     </Button>
                 </div>
 
-                <Text className="text-muted italic">{project.desc}</Text>
+                <Text className="text-muted italic" title={project.desc}>
+                    {project.desc.substring(0, 35)}
+                    {project.desc.length > 35 && "[...]"}
+                </Text>
                 <div className="flex items-center gap-xs">
-                    <Tag className="bg-[#f6f655] text-black">
-                        {project.status}
+                    <Tag
+                        className="text-black"
+                        style={{ backgroundColor: status.color }}
+                    >
+                        {status.title}
                     </Tag>
 
                     <Text>-</Text>
