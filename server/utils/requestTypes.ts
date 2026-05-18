@@ -1,4 +1,4 @@
-import { RequestGenericInterface } from "fastify";
+import type { RequestGenericInterface } from "fastify";
 
 export interface RequestBody extends RequestGenericInterface {
 	Body: string;
@@ -13,5 +13,11 @@ export interface RequestBodyAuth extends RequestGenericInterface {
 export interface RequestParamsAuth extends RequestBodyAuth {
 	Params: {
 		spaceId?: string;
+	};
+}
+
+export interface RequestParamsName extends RequestGenericInterface {
+	Params: {
+		name: string;
 	};
 }

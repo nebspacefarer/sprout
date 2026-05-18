@@ -1,6 +1,8 @@
 import "./App.css";
 import { Route, Switch } from "wouter";
 import HomePage from "#pages/HomePage";
+import ProjectPage from "#pages/ProjectPage";
+import ProjectsPage from "#pages/ProjectsPage";
 import Footer from "./Footer";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
@@ -12,9 +14,16 @@ const App = () => {
 				<Sidebar />
 				<div className="flex-1">
 					<Topbar />
-					<Switch>
-						<Route path="/" component={HomePage} />
-					</Switch>
+					<div className="p-sm">
+						<Switch>
+							<Route path="/" component={HomePage} />
+							<Route path="/projects" component={ProjectsPage} />
+							<Route
+								path="/projects/:name"
+								component={ProjectPage}
+							/>
+						</Switch>
+					</div>
 				</div>
 			</div>
 			<Footer />
