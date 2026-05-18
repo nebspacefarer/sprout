@@ -1,6 +1,7 @@
 import { Avatar as BaseAvatar } from "@base-ui/react/avatar";
 import type { BaseHTMLAttributes } from "preact";
 import { cn } from "#utils/cn";
+import { toFallback } from "#utils/strings";
 import Text from "./Text";
 
 interface AvatarProps extends BaseHTMLAttributes<HTMLBaseElement> {
@@ -14,7 +15,7 @@ export default function Avatar(props: AvatarProps) {
 		<div>
 			<BaseAvatar.Root
 				className={cn(
-					"flex overflow-hidden rounded-full",
+					"flex items-center justify-center overflow-hidden rounded-full bg-surface",
 					props.className,
 				)}
 			>
@@ -24,7 +25,7 @@ export default function Avatar(props: AvatarProps) {
 					height={props.size ?? "48"}
 				/>
 				<BaseAvatar.Fallback delay={600}>
-					<Text>{props.fallback}</Text>
+					<Text>{toFallback(props.fallback)}</Text>
 				</BaseAvatar.Fallback>
 			</BaseAvatar.Root>
 		</div>

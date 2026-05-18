@@ -5,7 +5,7 @@ import { cn } from "#utils/cn";
 
 interface DialogProps extends BaseHTMLAttributes<HTMLBaseElement> {
 	open: Signal<boolean>;
-	dialogTrigger: ComponentChildren;
+	dialogTrigger?: ComponentChildren;
 	dialogTitle: string;
 	dialogAccept?: ComponentChildren;
 }
@@ -15,7 +15,10 @@ export default function Dialog(props: DialogProps) {
 		<BaseDialog.Root open={props.open.value}>
 			<BaseDialog.Trigger>{props.dialogTrigger}</BaseDialog.Trigger>
 			<BaseDialog.Portal>
-				<BaseDialog.Backdrop className="fixed inset-0 min-h-dvh bg-black opacity-20 transition-all duration-150 data-[ending-style]:opacity-0 data-[starting-style]:opacity-0 supports-[-webkit-touch-callout:none]:absolute dark:opacity-70" />
+				<BaseDialog.Backdrop
+					onClick={() => (props.open.value = false)}
+					className="fixed inset-0 min-h-dvh bg-black opacity-20 transition-all duration-150 data-[ending-style]:opacity-0 data-[starting-style]:opacity-0 supports-[-webkit-touch-callout:none]:absolute dark:opacity-70"
+				/>
 				<BaseDialog.Popup
 					className={cn(
 						"fixed top-1/2 left-1/2 -mt-sm w-96 max-w-[calc(100vw-3rem)] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-crust p-sm transition-all duration-150 data-[ending-style]:scale-90 data-[starting-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:opacity-0",
@@ -30,7 +33,10 @@ export default function Dialog(props: DialogProps) {
 					</BaseDialog.Description>
 					<div className="flex justify-end gap-xs">
 						{props.dialogAccept}
-						<BaseDialog.Close className="flex h-10 cursor-pointer select-none items-center justify-center rounded-md px-3.5 hover:bg-surface focus-visible:outline-2 focus-visible:outline-blue-800 focus-visible:-outline-offset-1 active:bg-gray-100">
+						<BaseDialog.Close
+							onClick={() => (props.open.value = false)}
+							className="flex h-10 cursor-pointer select-none items-center justify-center rounded-md px-3.5 hover:bg-surface focus-visible:outline-2 focus-visible:outline-border focus-visible:-outline-offset-1 active:bg-border"
+						>
 							Close
 						</BaseDialog.Close>
 					</div>

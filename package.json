@@ -12,6 +12,7 @@
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.4.1",
+		"@daypicker/react": "^10.0.1",
 		"@deepsignal/preact": "^4.1.0",
 		"@fastify/cors": "^11.2.0",
 		"@fastify/static": "^9.1.3",

@@ -23,8 +23,9 @@ export default defineConfig({
 				accentForeground: "#222222",
 
 				foreground: "#dfdfdf",
-				danger: "#F76363",
 				success: "#A8FF78",
+				warning: "#FCA465",
+				danger: "#F76363",
 
 				muted: "#5a5961",
 				border: "#2c2b34",
@@ -35,6 +36,7 @@ export default defineConfig({
 	rules: [
 		["p-xs", { padding: "calc(var(--spacing) * 3) !important" }],
 		["p-sm", { padding: "calc(var(--spacing) * 6) !important" }],
+		["p-md", { padding: "calc(var(--spacing) * 9) !important" }],
 		["gap-xs", { gap: "calc(var(--spacing) * 3) !important" }],
 		["gap-sm", { gap: "calc(var(--spacing) * 6) !important" }],
 	],

@@ -2,20 +2,29 @@ import { Combobox as BaseCombobox } from "@base-ui/react/combobox";
 import type { Signal } from "@preact/signals";
 import { IconCheck, IconChevronDown, IconX } from "@tabler/icons-preact";
 import type { BaseHTMLAttributes } from "preact";
+import { cn } from "#utils/cn";
 
 interface SelectProps extends BaseHTMLAttributes<HTMLBaseElement> {
     selectTitle: string;
     items: string[];
     placeholder: string;
     value: Signal<string>;
+    horizontal?: boolean;
 }
 
 export default function Select(props: SelectProps) {
+    if (props.horizontal === undefined) props.horizontal = false;
+
     return (
         <BaseCombobox.Root items={props.items}>
-            <div className="relative flex flex-col gap-1 leading-5">
+            <div
+                className={cn(
+                    "relative flex w-fit items-center gap-xs leading-5",
+                    !props.horizontal && "flex-col items-start gap-1",
+                )}
+            >
                 <label htmlFor={props.id}>{props.selectTitle}</label>
-                <BaseCombobox.InputGroup className="relative box-content h-10 w-full rounded-md border border-surface focus-within:outline-2 focus-within:outline-black focus-within:-outline-offset-1 [&>input]:pr-[calc(0.5rem+1.5rem)] has-[.combobox-clear]:[&>input]:pr-[calc(0.5rem+1.5rem*2)]">
+                <BaseCombobox.InputGroup className="relative box-content h-10 w-fit rounded-md border border-border focus-within:outline-2 focus-within:outline-border focus-within:-outline-offset-1 [&>input]:pr-[calc(0.5rem+1.5rem)] has-[.combobox-clear]:[&>input]:pr-[calc(0.5rem+1.5rem*2)]">
                     <BaseCombobox.Input
                         id={props.id}
                         placeholder={props.placeholder}
