@@ -16,3 +16,4 @@ dist/
 .idea
 
 .env
+sprout.db
