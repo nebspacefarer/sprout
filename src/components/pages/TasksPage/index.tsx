@@ -1,3 +1,4 @@
+import { Toast } from "@base-ui/react";
 import { useDeepSignal } from "@deepsignal/preact";
 import { useSignal } from "@preact/signals";
 import { IconListDetails } from "@tabler/icons-preact";
@@ -11,6 +12,7 @@ import TasksQuickAddBar from "./TasksQuickAddBar";
 import TasksToolbar from "./TasksToolbar";
 
 export default function TasksPage() {
+    const toastManager = Toast.useToastManager();
     const _searchUrl = useSearch();
     const projects = useSignal<ProjectData[]>([]);
 
@@ -56,10 +58,19 @@ export default function TasksPage() {
         };
 
         if (task.title.length === 0) {
-            return;
+            return toastManager.add({
+                title: "An error occured",
+                description: "Please enter a task title first.",
+                type: "error",
+            });
         }
         if (task.projectId.length === 0) {
-            return;
+            return toastManager.add({
+                title: "An error occured",
+                description:
+                    "Please select a Project Target to add the task to.",
+                type: "error",
+            });
         }
 
         const result = await fetch("http://localhost:3536/api/tasks", {
