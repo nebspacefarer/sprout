@@ -2,7 +2,7 @@ import { useDeepSignal } from "@deepsignal/preact";
 import type { Signal } from "@preact/signals";
 import { IconClockPlay, IconFlag } from "@tabler/icons-preact";
 import type { BaseHTMLAttributes, ComponentChildren } from "preact";
-import type { Task, TimeTrack } from "#utils/types";
+import type { ProjectData, Task, TimeTrack } from "#utils/types";
 import Button from "../ui/Button";
 import DatePicker from "../ui/DatePicker";
 import Dialog from "../ui/Dialog";
@@ -13,10 +13,10 @@ import Show from "../ui/Show";
 import Text from "../ui/Text";
 
 interface DialogProps extends BaseHTMLAttributes<HTMLBaseElement> {
+    projectsSelected: Signal<ProjectData[]>;
     open: Signal<boolean>;
     dialogTrigger?: ComponentChildren;
     task: Signal<Task>;
-    tasks: Signal<Task[]>;
 }
 
 export default function EditTaskDialog(props: DialogProps) {
@@ -41,14 +41,29 @@ export default function EditTaskDialog(props: DialogProps) {
             });
 
             const data = await result.json();
-            console.log(data);
 
-            props.tasks.value = [
-                ...props.tasks.value.filter(
-                    (task) => task._id !== data.task._id,
+            const projectIndex = props.projectsSelected.value.findIndex(
+                (p) => p.project._id === props.task.value.projectId,
+            );
+
+            const projectData = props.projectsSelected.value.find(
+                (p) => p.project._id,
+            );
+
+            projectData.tasks = [
+                ...props.projectsSelected.value[projectIndex].tasks.filter(
+                    (t) => t._id !== data.task._id,
                 ),
                 data.task,
             ];
+
+            props.projectsSelected.value = [
+                ...props.projectsSelected.value.filter(
+                    (p) => p.project._id !== projectData.project._id,
+                ),
+                projectData,
+            ];
+
             props.open.value = false;
         }
 

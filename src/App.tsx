@@ -23,7 +23,7 @@ const App = () => {
 								path="/projects/:name"
 								component={ProjectPage}
 							/>
-							<Route path="/tasks/:name" component={TasksPage} />
+							<Route path="/tasks" component={TasksPage} />
 						</Switch>
 					</div>
 				</div>

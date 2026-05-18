@@ -24,6 +24,12 @@ export type Project = {
 };
 export type ProjectDocument = NeboaDocument<Project>;
 
+export type ProjectData = {
+	project: Project;
+	tasks: Task[];
+	notes: Note[];
+};
+
 export type TimeTrack = {
 	userId: string;
 	sessions: number[];

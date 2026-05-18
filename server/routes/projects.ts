@@ -12,6 +12,26 @@ const projects: FastifyPluginAsync = async (fastify): Promise<void> => {
 		async (_request: FastifyRequest, reply: FastifyReply) => {
 			const projects = fastify.db().projects.query().find();
 
+			for (const project in projects) {
+				const tasks: TaskDocument[] = fastify
+					.db()
+					.tasks.query()
+					.equalTo("projectId", projects[project]._id)
+					.find();
+
+				const notes: NoteDocument[] = fastify
+					.db()
+					.notes.query()
+					.equalTo("projectId", projects[project]._id)
+					.find();
+
+				projects[project] = {
+					project: projects[project],
+					tasks: tasks,
+					notes: notes,
+				};
+			}
+
 			return reply.code(200).send({
 				projects,
 			});

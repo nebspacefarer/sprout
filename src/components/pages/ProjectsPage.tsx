@@ -1,9 +1,10 @@
-import { useDeepSignal } from "@deepsignal/preact";
-import { IconDots } from "@tabler/icons-preact";
+import { useSignal } from "@preact/signals";
+import { IconDots, IconPlant } from "@tabler/icons-preact";
 import { useEffect } from "preact/hooks";
 import { useLocation } from "wouter";
 import { textToParam } from "#utils/strings";
-import type { Project } from "#utils/types";
+import type { Project, ProjectData } from "#utils/types";
+import PageTitle from "../PageTitle";
 import Avatar from "../ui/Avatar";
 import Button from "../ui/Button";
 import Card from "../ui/Card";
@@ -13,35 +14,37 @@ import Text from "../ui/Text";
 export default function ProjectsPage() {
     const [_location, navigate] = useLocation();
 
-    const store = useDeepSignal({
-        projects: [],
-    });
+    const projects = useSignal<ProjectData[]>([]);
 
     useEffect(() => {
         async function getProfiles() {
             const result = await fetch(`http://localhost:3536/api/projects`);
             const data = await result.json();
 
-            console.log(data);
-
-            store.projects.value = data.projects;
+            projects.value = [...data.projects];
         }
 
         getProfiles();
     }, []);
 
     return (
-        <div>
-            {store.projects.value.map((project: Project) => (
-                <Button
-                    className="bg-unset text-left text-foreground"
-                    onClick={() =>
-                        navigate(`/projects/${textToParam(project.title)}`)
-                    }
-                >
-                    <ProjectCard project={project} />
-                </Button>
-            ))}
+        <div className="flex flex-col gap-sm">
+            <PageTitle pageIcon={<IconPlant />} pageTitle="Projects" />
+
+            <div className="flex flex-wrap gap-sm">
+                {projects.value.map((project: ProjectData) => (
+                    <Button
+                        className="bg-unset text-left text-foreground"
+                        onClick={() =>
+                            navigate(
+                                `/projects/${textToParam(project.project.title)}`,
+                            )
+                        }
+                    >
+                        <ProjectCard project={project.project} />
+                    </Button>
+                ))}
+            </div>
         </div>
     );
 }
