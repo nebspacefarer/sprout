@@ -16,7 +16,7 @@ export default function Card(props: CardProps) {
                 "flex items-center gap-sm rounded-xl bg-crust",
                 props.small ? "px-sm py-xs" : "p-sm",
                 props.className,
-                props.orientation === "col" && "flex-col",
+                props.orientation === "col" && "flex-col items-start",
             )}
         >
             {props.children}
