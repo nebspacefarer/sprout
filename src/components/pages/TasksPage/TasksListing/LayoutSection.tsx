@@ -1,4 +1,4 @@
-import { type Signal, useSignal } from "@preact/signals";
+import type { Signal } from "@preact/signals";
 import {
     IconCheck,
     IconClockPlay,
@@ -7,59 +7,16 @@ import {
     IconNote,
     IconTrashX,
 } from "@tabler/icons-preact";
-import { useEffect } from "preact/hooks";
 import Button from "#ui/Button";
 import Card from "#ui/Card";
 import { MenuSelect, MenuSelectItem } from "#ui/MenuSelect";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { cn } from "#utils/cn";
-import { taskStatuses } from "#utils/status";
 import type { ProjectData, Status, Task } from "#utils/types";
 
-export default function TasksListing({
-    layout,
+export default function LayoutSection({
     projectsSelected,
-    deleteTask,
-    taskDialogOpen,
-    editedTask,
-}: {
-    layout: Signal<string>;
-    projectsSelected: Signal<ProjectData[]>;
-    deleteTask: (task: Task) => void;
-    taskDialogOpen: Signal<boolean>;
-    editedTask: Signal<Task>;
-}) {
-    const tasks = useSignal<Task[]>([]);
-
-    useEffect(() => {
-        function getTasks() {
-            tasks.value = [];
-
-            for (const projectData of projectsSelected.value) {
-                tasks.value = [...tasks.value, ...projectData.tasks];
-            }
-        }
-        getTasks();
-    }, [projectsSelected.value]);
-
-    return (
-        <div className="flex flex-col gap-sm bg-crust">
-            {taskStatuses.map((s) => (
-                <LayoutSection
-                    status={s}
-                    tasks={tasks}
-                    layout={layout}
-                    deleteTask={deleteTask}
-                    editedTask={editedTask}
-                    taskDialogOpen={taskDialogOpen}
-                />
-            ))}
-        </div>
-    );
-}
-
-function LayoutSection({
     status,
     layout,
     tasks,
@@ -67,6 +24,7 @@ function LayoutSection({
     taskDialogOpen,
     editedTask,
 }: {
+    projectsSelected: Signal<ProjectData[]>;
     status: Status;
     layout: Signal<string>;
     tasks: Signal<Task[]>;
@@ -90,6 +48,7 @@ function LayoutSection({
                             default:
                                 return (
                                     <SectionTask
+                                        projectsSelected={projectsSelected}
                                         task={task}
                                         deleteTask={() => deleteTask(task)}
                                         taskDialogOpen={taskDialogOpen}
@@ -104,11 +63,13 @@ function LayoutSection({
 }
 
 function SectionTask({
+    projectsSelected,
     task,
     deleteTask,
     taskDialogOpen,
     editedTask,
 }: {
+    projectsSelected: Signal<ProjectData[]>;
     task: Task;
     deleteTask: (_id: string) => void;
     taskDialogOpen: Signal<boolean>;
@@ -118,6 +79,10 @@ function SectionTask({
         editedTask.value = task;
         taskDialogOpen.value = true;
     }
+
+    const projectData = projectsSelected.value.find(
+        (p) => p.project._id === task.projectId,
+    );
 
     return (
         <Card className="justify-between bg-surface font-semibold" small>
@@ -131,6 +96,12 @@ function SectionTask({
                     onClick={() => editTask()}
                 >
                     <div className="flex items-center gap-xs">
+                        <Show when={projectsSelected.value.length > 1}>
+                            <Text className="text-muted">
+                                {projectData.project.title}
+                            </Text>
+                        </Show>
+
                         <Text className="border-surface border-b transition-all group-hover:border-primary">
                             {task.title}
                         </Text>
