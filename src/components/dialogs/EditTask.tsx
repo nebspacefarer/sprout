@@ -1,7 +1,9 @@
 import { useDeepSignal } from "@deepsignal/preact";
 import type { Signal } from "@preact/signals";
-import { IconClockPlay, IconFlag } from "@tabler/icons-preact";
+import { IconCheck, IconClockPlay, IconFlag } from "@tabler/icons-preact";
 import type { BaseHTMLAttributes, ComponentChildren } from "preact";
+import { MenuCheckbox } from "#ui/MenuCheckbox";
+import { cn } from "#utils/cn";
 import type { ProjectData, Task, TimeTrack } from "#utils/types";
 import Button from "../ui/Button";
 import DatePicker from "../ui/DatePicker";
@@ -30,9 +32,35 @@ export default function EditTaskDialog(props: DialogProps) {
             priority: props.task.value.priority,
             status: props.task.value.status,
             timeTracking: props.task.value.timeTracking,
+            assigneesId: props.task.value.assigneesId,
             userId: props.task.value.userId,
             projectId: props.task.value.projectId,
         });
+
+        function isAssigneeSelected(userId: string) {
+            if (dataTask.assigneesId.value !== undefined) {
+                if (dataTask.assigneesId.value.find((a) => a === userId)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        function selectAssignee(userId: string) {
+            if (!isAssigneeSelected(userId)) {
+                dataTask.assigneesId.value = [
+                    ...dataTask.assigneesId.value,
+                    userId,
+                ];
+            } else {
+                dataTask.assigneesId.value = [
+                    ...dataTask.assigneesId.value.filter((a) => a !== userId),
+                ];
+            }
+        }
 
         async function editTask() {
             const result = await fetch(`http://localhost:3536/api/tasks`, {
@@ -153,6 +181,45 @@ export default function EditTaskDialog(props: DialogProps) {
                                 <IconFlag /> <Text>3</Text>
                             </MenuSelectItem>
                         </MenuSelect>
+
+                        <div className="flex flex-col gap-xs">
+                            <Text className="font-bold text-sm">Assignees</Text>
+                            <MenuCheckbox
+                                menuTitle={
+                                    <Text>
+                                        {dataTask.assigneesId.value ===
+                                            undefined
+                                            ? "Pick Assignee(s)"
+                                            : dataTask.assigneesId.value.join(
+                                                ", ",
+                                            )}
+                                    </Text>
+                                }
+                            >
+                                {["0"].map((userId: string) => (
+                                    <Button
+                                        className={cn(
+                                            "flex min-w-[200px] items-center justify-start gap-xs bg-unset text-left font-normal text-foreground hover:text-foreground",
+                                            isAssigneeSelected(userId)
+                                                ? "text-foreground"
+                                                : "text-muted",
+                                        )}
+                                        onClick={() => selectAssignee(userId)}
+                                    >
+                                        <IconCheck
+                                            size={14}
+                                            className={cn(
+                                                "transition-all",
+                                                isAssigneeSelected(userId)
+                                                    ? "opacity-100"
+                                                    : "opacity-0",
+                                            )}
+                                        />
+                                        <Text>{userId}</Text>
+                                    </Button>
+                                ))}
+                            </MenuCheckbox>
+                        </div>
 
                         <div className="flex flex-col gap-xs">
                             <Text className="font-bold text-sm">

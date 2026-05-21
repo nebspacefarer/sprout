@@ -105,17 +105,20 @@ function SectionTask({
                         <Text className="border-surface border-b transition-all group-hover:border-primary">
                             {task.title}
                         </Text>
+
                         <Show when={task.content !== undefined}>
                             <IconNote
                                 className="text-muted"
                                 title="Read more..."
                             />
                         </Show>
+
                         <Show when={task.dueAt !== undefined}>
                             <Text className="text-sm">
                                 Due Date: {task.dueAt}
                             </Text>
                         </Show>
+
                         <IconFlag
                             size={16}
                             className={cn(
@@ -126,15 +129,14 @@ function SectionTask({
                             )}
                             title={`Priority ${task.priority}`}
                         />
-                    </div>
 
-                    <div className="flex items-center gap-sm text-sm">
-                        <Text>Created by: {task.userId}</Text>
-                        <Show when={task.assigneesId !== undefined}>
-                            <Text>
-                                Assignee(s): {task.assigneesId?.join(", ")}
-                            </Text>
-                        </Show>
+                        <div className="flex items-center gap-xs px-sm">
+                            <Show when={task.assigneesId !== undefined}>
+                                <Text>
+                                    Assignee(s): {task.assigneesId?.join(", ")}
+                                </Text>
+                            </Show>
+                        </div>
                     </div>
                 </Button>
             </div>
