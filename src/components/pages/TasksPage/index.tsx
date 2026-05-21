@@ -53,6 +53,7 @@ export default function TasksPage() {
             priority: 1,
             status: 0,
             timeTracking: [],
+            assigneesId: ["0"],
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };
