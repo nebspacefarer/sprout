@@ -2,11 +2,12 @@ import { Separator } from "@base-ui/react";
 import { useSignal } from "@preact/signals";
 import { IconListDetails, IconNote } from "@tabler/icons-preact";
 import { useEffect } from "preact/hooks";
-import { useParams } from "wouter";
+import { Redirect, useParams } from "wouter";
 import Button from "#ui/Button";
 import Card from "#ui/Card";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
+import { isAuthenticated } from "#utils/login";
 import type { Note, Project, Task } from "#utils/types";
 import NotesListing from "./NotesListing";
 import ProjectToolbar from "./ProjectTopbar";
@@ -17,6 +18,10 @@ export default function ProjectPage() {
     const project = useSignal<Project>(null);
     const tasks = useSignal<Task[]>([]);
     const notes = useSignal<Note[]>([]);
+
+    if (!isAuthenticated()) {
+        return <Redirect to="/" />;
+    }
 
     useEffect(() => {
         async function getProject() {

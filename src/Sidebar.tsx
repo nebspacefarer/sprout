@@ -5,8 +5,11 @@ import {
 	IconMailPlus,
 	IconMenu2,
 } from "@tabler/icons-preact";
+import Show from "#ui/Show";
 import { cn } from "#utils/cn";
 import AddProjectDialog from "./components/dialogs/AddProject";
+import LoginDialog from "./components/dialogs/LoginDialog";
+import RegisterDialog from "./components/dialogs/RegisterDialog";
 import Avatar from "./components/ui/Avatar";
 import Button from "./components/ui/Button";
 import Link from "./components/ui/Link";
@@ -19,7 +22,7 @@ export default function Sidebar() {
 		<div className={cn("flex flex-col bg-crust p-sm")}>
 			<div className="flex-1">
 				<div className="flex flex-col gap-xs">
-					<Link href="/">
+					<Link href="/dashboard">
 						<Text className="font-bold">Dashboard</Text>
 					</Link>
 
@@ -63,18 +66,49 @@ export default function Sidebar() {
 					<Separator orientation="vertical" />
 				</div>
 			</div>
-			<div className="flex items-center gap-xs">
-				<Avatar
-					src="https://cdn.modrinth.com/data/TXl4HOmY/5dbaf5df7277868b0df9535416b038f96dcc6b0e_96.webp"
-					fallback="NE"
-				/>
 
-				<Text size="sm" className="font-semibold">
-					NebSpacefarer
-				</Text>
+			<Show when={true}>
+				<Disconnected />
+			</Show>
+			<Show when={false}>
+				<Connected />
+			</Show>
+		</div>
+	);
+}
 
-				<IconMenu2 size={18} />
-			</div>
+function Disconnected() {
+	const loginDialogOpen = useSignal<boolean>(false);
+	const registerDialogOpen = useSignal<boolean>(false);
+
+	return (
+		<div className="flex items-center gap-xs">
+			<Button onClick={() => (loginDialogOpen.value = true)}>
+				Login
+			</Button>
+			<Button onClick={() => (registerDialogOpen.value = true)}>
+				Register
+			</Button>
+
+			<LoginDialog open={loginDialogOpen} />
+			<RegisterDialog open={registerDialogOpen} />
+		</div>
+	);
+}
+
+function Connected() {
+	return (
+		<div className="flex items-center gap-xs">
+			<Avatar
+				src="https://cdn.modrinth.com/data/TXl4HOmY/5dbaf5df7277868b0df9535416b038f96dcc6b0e_96.webp"
+				fallback="NE"
+			/>
+
+			<Text size="sm" className="font-semibold">
+				NebSpacefarer
+			</Text>
+
+			<IconMenu2 size={18} />
 		</div>
 	);
 }

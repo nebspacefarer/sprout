@@ -3,7 +3,7 @@ import { useDeepSignal } from "@deepsignal/preact";
 import { useSignal } from "@preact/signals";
 import { IconListDetails } from "@tabler/icons-preact";
 import { useEffect } from "preact/hooks";
-import PageTitle from "src/components/PageTitle";
+import Page from "src/components/Page";
 import { useSearch } from "wouter";
 import type { ProjectData, Task } from "#utils/types";
 import EditTaskDialog from "../../dialogs/EditTask";
@@ -132,34 +132,30 @@ export default function TasksPage() {
     }
 
     return (
-        <div>
-            <div className="flex flex-col gap-sm">
-                <PageTitle pageIcon={<IconListDetails />} pageTitle="Tasks" />
+        <Page auth pageIcon={<IconListDetails />} pageTitle="Tasks">
+            <TasksToolbar
+                projectsSelected={projectsSelected}
+                projects={projects}
+                search={search}
+                checkedFields={checkedFields}
+                sort={sort}
+            />
 
-                <TasksToolbar
-                    projectsSelected={projectsSelected}
+            <div className="flex flex-col gap-xs">
+                <TasksQuickAddBar
                     projects={projects}
-                    search={search}
-                    checkedFields={checkedFields}
-                    sort={sort}
+                    addTaskProjectField={addTaskProjectField}
+                    addTaskField={addTaskField}
+                    createQuickTask={createQuickTask}
                 />
 
-                <div className="flex flex-col gap-xs">
-                    <TasksQuickAddBar
-                        projects={projects}
-                        addTaskProjectField={addTaskProjectField}
-                        addTaskField={addTaskField}
-                        createQuickTask={createQuickTask}
-                    />
-
-                    <TasksListing
-                        layout={layout}
-                        projectsSelected={projectsSelected}
-                        taskDialogOpen={taskDialogOpen}
-                        deleteTask={deleteTask}
-                        editedTask={editedTask}
-                    />
-                </div>
+                <TasksListing
+                    layout={layout}
+                    projectsSelected={projectsSelected}
+                    taskDialogOpen={taskDialogOpen}
+                    deleteTask={deleteTask}
+                    editedTask={editedTask}
+                />
             </div>
 
             <EditTaskDialog
@@ -167,6 +163,6 @@ export default function TasksPage() {
                 projectsSelected={projectsSelected}
                 task={editedTask}
             />
-        </div>
+        </Page>
     );
 }

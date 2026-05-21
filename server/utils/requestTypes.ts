@@ -21,3 +21,9 @@ export interface RequestParamsName extends RequestGenericInterface {
 		name: string;
 	};
 }
+
+export interface RequestParamsId extends RequestGenericInterface {
+	Params: {
+		id: string;
+	};
+}

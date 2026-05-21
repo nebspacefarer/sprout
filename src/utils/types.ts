@@ -66,11 +66,12 @@ export type NoteDocument = NeboaDocument<Note>;
 export type User = {
 	_id?: string;
 	username: string;
+	email: string;
 	password: string;
-	avatar: string;
-	bio: string;
+	avatar?: string;
+	bio?: string;
 	createdAt: string;
-	loggedAt: string;
+	loggedAt?: string;
 	roles: string[];
 };
 export type UserDocument = NeboaDocument<User>;

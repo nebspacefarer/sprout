@@ -6,7 +6,7 @@ import Show from "#ui/Show";
 import { projectStatuses } from "#utils/status";
 import { textToParam } from "#utils/strings";
 import type { Project, ProjectData, Status } from "#utils/types";
-import PageTitle from "../PageTitle";
+import Page from "../Page";
 import Avatar from "../ui/Avatar";
 import Button from "../ui/Button";
 import Card from "../ui/Card";
@@ -30,9 +30,7 @@ export default function ProjectsPage() {
     }, []);
 
     return (
-        <div className="flex flex-col gap-sm">
-            <PageTitle pageIcon={<IconPlant />} pageTitle="Projects" />
-
+        <Page auth pageIcon={<IconPlant />} pageTitle="Projects">
             <div className="flex flex-wrap gap-sm">
                 {projects.value.map((project: ProjectData) => (
                     <Button
@@ -51,7 +49,7 @@ export default function ProjectsPage() {
                     <Text className="text-muted">No project... yet?</Text>
                 </Show>
             </div>
-        </div>
+        </Page>
     );
 }
 

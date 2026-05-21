@@ -1,3 +1,11 @@
+import { IconHome } from "@tabler/icons-preact";
+import Text from "#ui/Text";
+import Page from "../Page";
+
 export default function HomePage() {
-	return <div>Content...</div>;
+	return (
+		<Page pageIcon={<IconHome />} pageTitle="Home">
+			<Text>Home Content...</Text>
+		</Page>
+	);
 }

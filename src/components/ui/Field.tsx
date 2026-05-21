@@ -9,6 +9,7 @@ interface FieldProps extends BaseHTMLAttributes<HTMLBaseElement> {
     fieldTitle: string;
     value: Signal<string>;
     horizontal?: boolean;
+    type?: "text" | "password" | "email";
 }
 
 export default function Field(props: FieldProps) {
@@ -30,6 +31,7 @@ export default function Field(props: FieldProps) {
                 <Text>{props.fieldTitle}</Text>
             </BaseField.Label>
             <BaseField.Control
+                type={props.type ?? "text"}
                 placeholder={props.placeholder}
                 value={props.value}
                 onInput={(ev) => (props.value.value = ev.currentTarget.value)}

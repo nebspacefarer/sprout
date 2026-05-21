@@ -11,6 +11,8 @@ import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 
 const App = () => {
+	const _token = localStorage.getItem("token");
+
 	return (
 		<Toast.Provider>
 			<main className="root">
