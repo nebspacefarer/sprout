@@ -15,8 +15,8 @@ interface ComboboxProps extends BaseHTMLAttributes<HTMLBaseElement> {
 
 export function Combobox(props: ComboboxProps) {
     const comboboxStore = useDeepSignal({
-        labels: [],
-        selected: [],
+        labels: props.items,
+        selected: props.value.value,
         query: "",
     });
 
