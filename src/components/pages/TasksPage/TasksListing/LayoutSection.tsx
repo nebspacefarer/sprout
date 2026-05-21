@@ -11,6 +11,7 @@ import Button from "#ui/Button";
 import Card from "#ui/Card";
 import { MenuSelect, MenuSelectItem } from "#ui/MenuSelect";
 import Show from "#ui/Show";
+import Tag from "#ui/Tag";
 import Text from "#ui/Text";
 import { cn } from "#utils/cn";
 import type { ProjectData, Status, Task } from "#utils/types";
@@ -130,18 +131,24 @@ function SectionTask({
                             title={`Priority ${task.priority}`}
                         />
 
-                        <div className="flex items-center gap-xs px-sm">
-                            <Show when={task.assigneesId !== undefined}>
-                                <Text>
-                                    Assignee(s): {task.assigneesId?.join(", ")}
-                                </Text>
-                            </Show>
+                        <div className="flex items-center gap-xs">
+                            {task.tags.map((tag) => (
+                                <Tag className="border border-border bg-crust">
+                                    #{tag.name}
+                                </Tag>
+                            ))}
                         </div>
                     </div>
                 </Button>
             </div>
 
             <div className="flex items-center gap-sm">
+                <div className="flex items-center gap-xs px-sm">
+                    <Show when={task.assigneesId !== undefined}>
+                        <Text>{task.assigneesId?.join(", ")}</Text>
+                    </Show>
+                </div>
+
                 <Button className="flex items-center gap-xs border-border bg-crust py-1 transition-all hover:scale-[110%] hover:border-muted">
                     <IconClockPlay className="text-success" />{" "}
                     <Text className="text-muted">00:00:00</Text>
