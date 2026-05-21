@@ -1,10 +1,13 @@
 import { useDeepSignal } from "@deepsignal/preact";
-import type { Signal } from "@preact/signals";
+import { type Signal, useSignal } from "@preact/signals";
 import { IconCheck, IconClockPlay, IconFlag } from "@tabler/icons-preact";
 import type { BaseHTMLAttributes, ComponentChildren } from "preact";
+import { useEffect } from "preact/hooks";
+import { Combobox, type LabelItem } from "#ui/Combobox";
 import { MenuCheckbox } from "#ui/MenuCheckbox";
 import { cn } from "#utils/cn";
-import type { ProjectData, Task, TimeTrack } from "#utils/types";
+import { textToParam } from "#utils/strings";
+import type { ProjectData, Tag, Task, TimeTrack } from "#utils/types";
 import Button from "../ui/Button";
 import DatePicker from "../ui/DatePicker";
 import Dialog from "../ui/Dialog";
@@ -23,6 +26,19 @@ interface DialogProps extends BaseHTMLAttributes<HTMLBaseElement> {
 
 export default function EditTaskDialog(props: DialogProps) {
     if (props.task.value !== null) {
+        const tagsItems = useSignal<LabelItem[]>([]);
+
+        useEffect(() => {
+            if (props.task.value.tags) {
+                for (const tag of props.task.value.tags) {
+                    tagsItems.value = [
+                        ...tagsItems.value,
+                        { id: textToParam(tag.name), value: tag.name },
+                    ];
+                }
+            }
+        }, [props.task.value.tags]);
+
         const dataTask = useDeepSignal({
             _id: props.task.value._id,
             title: props.task.value.title,
@@ -35,6 +51,7 @@ export default function EditTaskDialog(props: DialogProps) {
             assigneesId: props.task.value.assigneesId,
             userId: props.task.value.userId,
             projectId: props.task.value.projectId,
+            tags: props.task.value.tags,
         });
 
         function isAssigneeSelected(userId: string) {
@@ -63,6 +80,20 @@ export default function EditTaskDialog(props: DialogProps) {
         }
 
         async function editTask() {
+            if (tagsItems.value !== undefined) {
+                for (const tagItem of tagsItems.value) {
+                    const tag: Tag = {
+                        name: tagItem.value,
+                        color: "#000000",
+                    };
+                    if (dataTask.tags.value !== undefined) {
+                        dataTask.tags.value = [...dataTask.value.tags, tag];
+                    } else {
+                        dataTask.tags.value = [tag];
+                    }
+                }
+            }
+
             const result = await fetch(`http://localhost:3536/api/tasks`, {
                 method: "PUT",
                 body: JSON.stringify(dataTask),
@@ -117,6 +148,14 @@ export default function EditTaskDialog(props: DialogProps) {
                             editorTitle="Content"
                             placeholder="Write task content..."
                             value={dataTask.content}
+                        />
+
+                        <Combobox
+                            id="tags"
+                            comboTitle="Tags"
+                            items={[]}
+                            placeholder="Add a tag..."
+                            value={tagsItems}
                         />
                     </div>
                     <div className="col-span-2 flex flex-col gap-sm">
@@ -187,8 +226,7 @@ export default function EditTaskDialog(props: DialogProps) {
                             <MenuCheckbox
                                 menuTitle={
                                     <Text>
-                                        {dataTask.assigneesId.value ===
-                                            undefined
+                                        {dataTask.assigneesId.value.length === 0
                                             ? "Pick Assignee(s)"
                                             : dataTask.assigneesId.value.join(
                                                 ", ",
