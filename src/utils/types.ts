@@ -17,10 +17,9 @@ export type Project = {
 	desc?: string;
 	tags?: Tag[];
 	status: number;
-	tasksStatus: string[];
-	createdAt: string;
-	updatedAt: string;
-	permissions: Permission[];
+	createdAt?: string;
+	updatedAt?: string;
+	permissions?: Permission[];
 };
 export type ProjectDocument = NeboaDocument<Project>;
 

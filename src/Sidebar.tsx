@@ -17,6 +17,7 @@ import Text from "./components/ui/Text";
 
 export default function Sidebar() {
 	const projectDialogOpen = useSignal<boolean>(false);
+	const auth = useSignal<boolean>(false);
 
 	return (
 		<div className={cn("flex flex-col bg-crust p-sm")}>
@@ -67,10 +68,10 @@ export default function Sidebar() {
 				</div>
 			</div>
 
-			<Show when={true}>
+			<Show when={!auth.value}>
 				<Disconnected />
 			</Show>
-			<Show when={false}>
+			<Show when={auth.value}>
 				<Connected />
 			</Show>
 		</div>

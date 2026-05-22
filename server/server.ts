@@ -1,3 +1,4 @@
+import cookie from "@fastify/cookie";
 import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
 import Fastify from "fastify";
@@ -8,6 +9,7 @@ import notes from "./routes/notes";
 import projects from "./routes/projects";
 import tasks from "./routes/tasks";
 import users from "./routes/users";
+import "dotenv/config";
 
 const fastify = Fastify({});
 
@@ -15,12 +17,21 @@ fastify.register(cors, {
 	origin: (_origin, cb) => {
 		cb(null, true);
 	},
+	credentials: true,
 });
 
 fastify.register(db);
 
 fastify.register(jwt, {
-	secret: "8be0c9e333e6e59bf0e4386e8f5c96daea4ef1aa07159684287cbc3df326add7",
+	secret: process.env.TOKEN_SECRET as string,
+	cookie: {
+		cookieName: "token",
+		signed: false,
+	},
+});
+
+fastify.register(cookie, {
+	secret: process.env.COOKIE_SECRET,
 });
 
 fastify.register(health);

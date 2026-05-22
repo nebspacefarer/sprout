@@ -7,6 +7,7 @@ import Dialog from "#ui/Dialog";
 import Field from "#ui/Field";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
+import { postRegister } from "#utils/fetch";
 
 interface DialogProps extends BaseHTMLAttributes<HTMLBaseElement> {
     open: Signal<boolean>;
@@ -38,16 +39,11 @@ export default function RegisterDialog(props: DialogProps) {
             return;
         }
 
-        const result = await fetch(`http://localhost:3536/api/auth/register`, {
-            method: "POST",
-            body: JSON.stringify({
-                email: email.value,
-                username: username.value,
-                password: password.value,
-            }),
-        });
-
-        const data = await result.json();
+        const data = await postRegister(
+            email.value,
+            username.value,
+            password.value,
+        );
 
         if (data.error) {
             error.value = data.error;

@@ -7,6 +7,7 @@ import Dialog from "#ui/Dialog";
 import Field from "#ui/Field";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
+import { postLogin } from "#utils/fetch";
 
 interface DialogProps extends BaseHTMLAttributes<HTMLBaseElement> {
     open: Signal<boolean>;
@@ -32,22 +33,12 @@ export default function LoginDialog(props: DialogProps) {
             return;
         }
 
-        const result = await fetch(`http://localhost:3536/api/auth/login`, {
-            method: "POST",
-            body: JSON.stringify({
-                email: email.value,
-                password: password.value,
-            }),
-        });
-
-        const data = await result.json();
+        const data = await postLogin(email.value, password.value);
 
         if (data.error) {
             error.value = data.error;
             return;
         }
-
-        localStorage.setItem("token", data.token);
 
         toastManager.add({
             title: "Logged in",

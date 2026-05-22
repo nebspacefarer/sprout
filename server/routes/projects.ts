@@ -1,18 +1,34 @@
 import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
 import type {
 	NoteDocument,
+	Permission,
+	Project,
+	ProjectData,
 	ProjectDocument,
 	TaskDocument,
 } from "../../src/utils/types";
+import { authPreHandler } from "../plugins/authPreHandler";
 import type { RequestBody, RequestParamsName } from "../utils/requestTypes";
 
 const projects: FastifyPluginAsync = async (fastify): Promise<void> => {
 	fastify.get(
 		"/api/projects",
-		async (_request: FastifyRequest, reply: FastifyReply) => {
+		{ preHandler: authPreHandler },
+		async (request: FastifyRequest, reply: FastifyReply) => {
 			const projects = fastify.db().projects.query().find();
 
+			const projectsData: ProjectData[] = [];
+
 			for (const project in projects) {
+				const authorized: boolean =
+					projects[project].permissions?.find(
+						(perm: Permission) => perm.userId === request.auth?._id,
+					) !== undefined;
+
+				if (!authorized) {
+					return;
+				}
+
 				const tasks: TaskDocument[] = fastify
 					.db()
 					.tasks.query()
@@ -25,15 +41,15 @@ const projects: FastifyPluginAsync = async (fastify): Promise<void> => {
 					.equalTo("projectId", projects[project]._id)
 					.find();
 
-				projects[project] = {
+				projectsData.push({
 					project: projects[project],
 					tasks: tasks,
 					notes: notes,
-				};
+				});
 			}
 
 			return reply.code(200).send({
-				projects,
+				projects: projectsData,
 			});
 		},
 	);
@@ -77,7 +93,13 @@ const projects: FastifyPluginAsync = async (fastify): Promise<void> => {
 	fastify.post<RequestBody>(
 		"/api/projects",
 		async (request, reply: FastifyReply) => {
-			const project = JSON.parse(request.body);
+			const project: Project = JSON.parse(request.body);
+
+			project.createdAt = new Date().toISOString();
+			project.updatedAt = project.createdAt;
+			project.permissions = [
+				{ level: 3, userId: request.auth?._id as string },
+			];
 
 			const result = fastify.db().projects.insert(project);
 

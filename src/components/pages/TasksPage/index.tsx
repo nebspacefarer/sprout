@@ -5,6 +5,7 @@ import { IconListDetails } from "@tabler/icons-preact";
 import { useEffect } from "preact/hooks";
 import Page from "src/components/Page";
 import { useSearch } from "wouter";
+import { deleteTask, getProjects, postTask } from "#utils/fetch";
 import type { ProjectData, Task } from "#utils/types";
 import EditTaskDialog from "../../dialogs/EditTask";
 import TasksListing from "./TasksListing";
@@ -34,15 +35,14 @@ export default function TasksPage() {
     const editedTask = useSignal<Task>(null);
 
     useEffect(() => {
-        async function getProjects() {
-            const result = await fetch(`http://localhost:3536/api/projects`);
-            const data = await result.json();
+        async function init() {
+            const data = await getProjects();
 
             projects.value = data.projects;
             projectsSelected.value = [...data.projects];
         }
 
-        getProjects();
+        init();
     }, []);
 
     async function createQuickTask() {
@@ -74,12 +74,7 @@ export default function TasksPage() {
             });
         }
 
-        const result = await fetch("http://localhost:3536/api/tasks", {
-            method: "POST",
-            body: JSON.stringify(task),
-        });
-
-        const data = await result.json();
+        const data = await postTask(task);
 
         const project = projects.value.find(
             (p) => p.project._id === addTaskProjectField.value,
@@ -105,13 +100,8 @@ export default function TasksPage() {
         });
     }
 
-    async function deleteTask(task: Task) {
-        const result = await fetch("http://localhost:3536/api/tasks", {
-            method: "DELETE",
-            body: JSON.stringify({ _id: task._id }),
-        });
-
-        const data = await result.json();
+    async function runDeleteTask(task: Task) {
+        const data = await deleteTask(task);
 
         if (data.result) {
             const project = projectsSelected.value.find(
@@ -153,7 +143,7 @@ export default function TasksPage() {
                     layout={layout}
                     projectsSelected={projectsSelected}
                     taskDialogOpen={taskDialogOpen}
-                    deleteTask={deleteTask}
+                    deleteTask={runDeleteTask}
                     editedTask={editedTask}
                 />
             </div>

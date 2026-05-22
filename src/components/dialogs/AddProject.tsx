@@ -3,6 +3,7 @@ import { IconPhotoPlus } from "@tabler/icons-preact";
 import type { BaseHTMLAttributes, ComponentChildren } from "preact";
 import { useLocation } from "wouter";
 import { cn } from "#utils/cn";
+import { postProject } from "#utils/fetch";
 import { projectStatuses } from "#utils/status";
 import type { Project, Tag } from "#utils/types";
 import Avatar from "../ui/Avatar";
@@ -80,18 +81,9 @@ export default function AddProjectDialog(props: DialogProps) {
 			desc: desc.value,
 			status: projectStatuses.find((p) => p.title === status.value).id,
 			tags: tags,
-			tasksStatus: ["Todo", "In Progress", "Done"],
-			createdAt: new Date().toISOString(),
-			updatedAt: new Date().toISOString(),
-			permissions: [{ userId: "0", level: 3 }],
 		};
 
-		const result = await fetch("http://localhost:3536/api/projects", {
-			method: "POST",
-			body: JSON.stringify(project),
-		});
-
-		const data = await result.json();
+		const data = await postProject(project);
 
 		if (data) {
 			if (location === "/projects" || location === "/") {

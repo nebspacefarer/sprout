@@ -6,6 +6,7 @@ import { useEffect } from "preact/hooks";
 import { Combobox, type LabelItem } from "#ui/Combobox";
 import { MenuCheckbox } from "#ui/MenuCheckbox";
 import { cn } from "#utils/cn";
+import { updateTask } from "#utils/fetch";
 import { textToParam } from "#utils/strings";
 import type { ProjectData, Tag, Task, TimeTrack } from "#utils/types";
 import Button from "../ui/Button";
@@ -94,12 +95,7 @@ export default function EditTaskDialog(props: DialogProps) {
                 }
             }
 
-            const result = await fetch(`http://localhost:3536/api/tasks`, {
-                method: "PUT",
-                body: JSON.stringify(dataTask),
-            });
-
-            const data = await result.json();
+            const data = await updateTask(dataTask.value);
 
             const projectIndex = props.projectsSelected.value.findIndex(
                 (p) => p.project._id === props.task.value.projectId,

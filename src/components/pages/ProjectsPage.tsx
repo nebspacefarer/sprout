@@ -3,6 +3,7 @@ import { IconDots, IconPlant } from "@tabler/icons-preact";
 import { useEffect } from "preact/hooks";
 import { useLocation } from "wouter";
 import Show from "#ui/Show";
+import { getProjects } from "#utils/fetch";
 import { projectStatuses } from "#utils/status";
 import { textToParam } from "#utils/strings";
 import type { Project, ProjectData, Status } from "#utils/types";
@@ -19,14 +20,17 @@ export default function ProjectsPage() {
     const projects = useSignal<ProjectData[]>([]);
 
     useEffect(() => {
-        async function getProfiles() {
-            const result = await fetch(`http://localhost:3536/api/projects`);
-            const data = await result.json();
+        async function init() {
+            const data = await getProjects();
+
+            if (data === undefined || data.err) {
+                return console.error(data?.err);
+            }
 
             projects.value = [...data.projects];
         }
 
-        getProfiles();
+        init();
     }, []);
 
     return (

@@ -1,8 +1,6 @@
 import { Separator } from "@base-ui/react";
 import type { ComponentChildren } from "preact";
-import { Redirect } from "wouter";
 import Text from "#ui/Text";
-import { isAuthenticated } from "#utils/login";
 
 export default function Page({
     auth = false,
@@ -15,8 +13,6 @@ export default function Page({
     pageTitle: string;
     children: ComponentChildren;
 }) {
-    if (auth && !isAuthenticated()) return <Redirect to="/" />;
-
     return (
         <div className="flex flex-col gap-sm">
             <div className="flex items-center gap-xs">
