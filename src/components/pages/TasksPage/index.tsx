@@ -96,29 +96,33 @@ export default function TasksPage() {
         }
 
         toastManager.add({
-            description: "Task created successfully",
+            description: "Task created successfully!",
         });
     }
 
     async function runDeleteTask(task: Task) {
         const data = await deleteTask(task);
 
-        if (data.result) {
-            const project = projectsSelected.value.find(
-                (p) => p.project._id === task.projectId,
-            );
-
-            project.tasks = [
-                ...project.tasks.filter((t) => t._id !== task._id),
-            ];
-
-            projectsSelected.value = [
-                ...projectsSelected.value.filter(
-                    (p) => p.project._id !== project.project._id,
-                ),
-                project,
-            ];
+        if (data.err) {
+            toastManager.add({
+                title: "An error occured",
+                description: data.err,
+                type: "error",
+            });
         }
+
+        const project = projectsSelected.value.find(
+            (p) => p.project._id === task.projectId,
+        );
+
+        project.tasks = [...project.tasks.filter((t) => t._id !== task._id)];
+
+        projectsSelected.value = [
+            ...projectsSelected.value.filter(
+                (p) => p.project._id !== project.project._id,
+            ),
+            project,
+        ];
     }
 
     return (
