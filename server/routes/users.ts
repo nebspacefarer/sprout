@@ -1,15 +1,29 @@
 import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
-import type { UserDocument } from "../../src/utils/types";
+import type { PublicUser, UserDocument } from "../../src/utils/types";
 import type { RequestBody, RequestParamsId } from "../utils/requestTypes";
 
 const users: FastifyPluginAsync = async (fastify): Promise<void> => {
     fastify.get(
         "/api/users",
         async (_request: FastifyRequest, reply: FastifyReply) => {
-            const users: UserDocument[] = fastify.db().users.query().find();
+            const usersDb: UserDocument[] = fastify.db().users.query().find();
+            const publicUsers: PublicUser[] = [];
+
+            for (const user of usersDb) {
+                const publicUser: PublicUser = {
+                    _id: user._id,
+                    username: user.username,
+                    avatar: user.avatar,
+                    bio: user.bio,
+                    createdAt: user.createdAt,
+                    loggedAt: user.loggedAt,
+                };
+
+                publicUsers.push(publicUser);
+            }
 
             return reply.code(200).send({
-                users: users,
+                users: publicUsers,
             });
         },
     );
@@ -19,14 +33,19 @@ const users: FastifyPluginAsync = async (fastify): Promise<void> => {
         async (request, reply: FastifyReply) => {
             const { id } = request.params;
 
-            const user: UserDocument = fastify
+            const users: UserDocument[] = fastify
                 .db()
                 .users.query()
                 .equalTo("_id", id)
                 .find();
 
+            if (!users) {
+                return reply.code(404).send({
+                    err: "User not found.",
+                });
+            }
             return reply.code(200).send({
-                user: user,
+                user: users[0],
             });
         },
     );

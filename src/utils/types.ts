@@ -72,8 +72,18 @@ export type User = {
 	createdAt: string;
 	loggedAt?: string;
 	roles: string[];
+	token?: string;
 };
 export type UserDocument = NeboaDocument<User>;
+
+export type PublicUser = {
+	_id?: string;
+	username: string;
+	avatar?: string;
+	bio?: string;
+	createdAt: string;
+	loggedAt?: string;
+};
 
 export type Status = {
 	id: number;

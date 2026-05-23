@@ -54,12 +54,12 @@ const auth: FastifyPluginAsync = async (fastify): Promise<void> => {
             };
 
             const token = fastify.jwt.sign(
-                { id: updatedUser._id },
+                { id: updatedUser._id, roles: updatedUser.roles },
                 { expiresIn: "10 minutes" },
             );
 
             const refresh = fastify.jwt.sign(
-                { id: updatedUser._id },
+                { id: updatedUser._id, roles: updatedUser.roles },
                 { expiresIn: "1 day" },
             );
 
@@ -93,18 +93,18 @@ const auth: FastifyPluginAsync = async (fastify): Promise<void> => {
             });
         } catch (err) {
             if (err.code === "FAST_JWT_EXPIRED") {
-                // Refresh Token is valid but expired, rotate it.
+                // Refresh Token is valid but expired, rotate it with Access Token.
                 const decoded = fastify.jwt.decode(
                     refreshToken,
-                ) as DecodePayloadType & { id: string };
+                ) as DecodePayloadType & { id: string; roles: string[] };
 
                 const token = fastify.jwt.sign(
-                    { id: decoded.id },
+                    { id: decoded.id, roles: decoded.roles },
                     { expiresIn: "10 minutes" },
                 );
 
                 const refresh = fastify.jwt.sign(
-                    { id: decoded.id },
+                    { id: decoded.id, roles: decoded.roles },
                     { expiresIn: "1 day" },
                 );
 

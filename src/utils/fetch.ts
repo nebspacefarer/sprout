@@ -34,6 +34,7 @@ async function callApi(path: string, options?: RequestInit) {
 }
 
 // AUTH
+
 export async function postRegister(
     email: string,
     username: string,
@@ -68,7 +69,9 @@ export async function getProjects() {
 }
 
 export async function getProjectByName(name: string) {
-    return await callApi(`${url}/projects/${name}`);
+    return await callApi(`${url}/projects/${name}`, {
+        credentials: "include",
+    });
 }
 
 export async function postProject(project: Project) {

@@ -56,6 +56,7 @@ const projects: FastifyPluginAsync = async (fastify): Promise<void> => {
 
 	fastify.get<RequestParamsName>(
 		"/api/projects/:name",
+		{ preHandler: authPreHandler },
 		async (request, reply: FastifyReply) => {
 			const { name } = request.params;
 
@@ -92,6 +93,7 @@ const projects: FastifyPluginAsync = async (fastify): Promise<void> => {
 
 	fastify.post<RequestBody>(
 		"/api/projects",
+		{ preHandler: authPreHandler },
 		async (request, reply: FastifyReply) => {
 			const project: Project = JSON.parse(request.body);
 

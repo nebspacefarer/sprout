@@ -13,7 +13,7 @@ declare module "fastify" {
     }
 
     interface FastifyRequest {
-        auth?: { _id: string };
+        auth?: { _id: string; roles: string[] };
         fastify: FastifyInstance | null;
     }
 }
@@ -21,15 +21,17 @@ declare module "fastify" {
 export const authPreHandler = async (
     request: FastifyRequest,
     reply: FastifyReply,
-    done: HookHandlerDoneFunction,
+    _done: HookHandlerDoneFunction,
 ) => {
     try {
         const decoded = (await request.jwtDecode()) as DecodePayloadType & {
             id: string;
+            roles: string[];
         };
 
         request.auth = {
             _id: decoded.id,
+            roles: decoded.roles,
         };
 
         await request.jwtVerify({
