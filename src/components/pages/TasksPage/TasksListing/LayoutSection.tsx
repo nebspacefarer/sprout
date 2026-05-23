@@ -132,7 +132,7 @@ function SectionTask({
                         />
 
                         <div className="flex items-center gap-xs">
-                            {task.tags.map((tag) => (
+                            {task.tags?.map((tag) => (
                                 <Tag className="border border-border bg-crust">
                                     #{tag.name}
                                 </Tag>
