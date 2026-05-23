@@ -1,7 +1,7 @@
 import { navigate } from "wouter/use-browser-location";
-import type { Project, Task } from "./types";
+import type { Inbox, Project, Task } from "./types";
 
-const url = "http://localhost:3536/api";
+const url = "/api";
 
 async function callApi(path: string, options?: RequestInit) {
     // Send request
@@ -60,6 +60,30 @@ export async function postLogin(email: string, password: string) {
     });
 }
 
+// INBOX
+
+export async function getInbox() {
+    return await callApi(`${url}/inbox`, {
+        credentials: "include",
+    });
+}
+
+export async function postInbox(entry: Inbox) {
+    return await callApi(`${url}/inbox`, {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify(entry),
+    });
+}
+
+export async function deleteInbox(entry: Inbox) {
+    return await callApi(`${url}/inbox`, {
+        method: "DELETE",
+        credentials: "include",
+        body: JSON.stringify({ _id: entry._id }),
+    });
+}
+
 // PROJECTS
 
 export async function getProjects() {
@@ -101,7 +125,7 @@ export async function updateTask(dataTask) {
 }
 
 export async function deleteTask(task: Task) {
-    return await fetch(`${url}/tasks`, {
+    return await callApi(`${url}/tasks`, {
         method: "DELETE",
         credentials: "include",
         body: JSON.stringify({ _id: task._id }),

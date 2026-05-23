@@ -20,6 +20,9 @@ export default defineConfig({
 	server: {
 		port: 3535,
 		strictPort: true,
+		proxy: {
+			"/api": "http://localhost:3536",
+		},
 	},
 	tools: {
 		postcss: {

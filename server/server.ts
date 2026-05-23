@@ -10,14 +10,14 @@ import projects from "./routes/projects";
 import tasks from "./routes/tasks";
 import users from "./routes/users";
 import "dotenv/config";
+import inbox from "./routes/inbox";
 
 const fastify = Fastify({});
 
 fastify.register(cors, {
-	origin: (_origin, cb) => {
-		cb(null, true);
-	},
+	origin: "http://localhost:3535",
 	credentials: true,
+	methods: "POST,GET,DELETE,PUT",
 });
 
 fastify.register(db);
@@ -40,6 +40,7 @@ fastify.register(auth);
 fastify.register(projects);
 fastify.register(tasks);
 fastify.register(notes);
+fastify.register(inbox);
 
 // Decorate Reply with default Content-Type
 fastify.addHook("onSend", (_request, reply, _payload, done) => {
