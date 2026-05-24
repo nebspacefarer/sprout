@@ -14,13 +14,20 @@ export default function TasksListing({
     return (
         <div className="flex w-full flex-col gap-xs">
             {tasks.value.map((task: Task) => (
-                <Card className="flex items-center gap-sm bg-surface" small>
-                    <Text className="text-sm">{task.status}</Text>
-                    <Text className="font-semibold">{task.title}</Text>
-                    <Text>{task.assigneesId?.join(", ")}</Text>
-                    <Show when={task.dueAt !== undefined}>
-                        <Text>Due: {task.dueAt}</Text>
-                    </Show>
+                <Card
+                    className="flex items-center justify-between bg-surface"
+                    small
+                >
+                    <div className="flex items-center gap-sm">
+                        <Text className="text-sm">{task.status}</Text>
+                        <Text className="font-semibold">{task.title}</Text>
+                    </div>
+                    <div className="flex items-center gap-sm">
+                        <Text>{task.assigneesId?.join(", ")}</Text>
+                        <Show when={task.dueAt !== undefined}>
+                            <Text>Due: {task.dueAt}</Text>
+                        </Show>
+                    </div>
                 </Card>
             ))}
 
