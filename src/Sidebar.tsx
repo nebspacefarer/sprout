@@ -2,12 +2,19 @@ import { Toast } from "@base-ui/react";
 import { Separator } from "@base-ui/react/separator";
 import { type Signal, useSignal } from "@preact/signals";
 import {
+	IconDashboard,
+	IconInbox,
 	IconLayoutGridAdd,
+	IconListDetails,
 	IconLogout,
 	IconMailPlus,
 	IconMenu2,
+	IconNote,
+	IconPlant,
 	IconSettings,
 } from "@tabler/icons-preact";
+import type { ComponentChildren } from "preact";
+import { useLocation } from "wouter";
 import Popover from "#ui/Popover";
 import Show from "#ui/Show";
 import { cn } from "#utils/cn";
@@ -22,57 +29,81 @@ import Link from "./components/ui/Link";
 import Text from "./components/ui/Text";
 
 export default function Sidebar() {
+	const [location, _navigate] = useLocation();
+
 	const projectDialogOpen = useSignal<boolean>(false);
 	const user = useSignal<PublicUser | null>(
 		JSON.parse(localStorage.getItem("user")),
 	);
 
+	const links: {
+		name?: string;
+		href?: string;
+		icon?: ComponentChildren;
+		children?: ComponentChildren;
+		separator?: ComponentChildren;
+	}[] = [
+			{ name: "Dashboard", href: "/dashboard", icon: <IconDashboard /> },
+			{
+				name: "Inbox",
+				href: "/inbox",
+				icon: <IconInbox />,
+				children: (
+					<Button className="opacity-0 transition-all group-hover:opacity-100">
+						<IconMailPlus size={22} />
+					</Button>
+				),
+			},
+			{ separator: <Separator orientation="vertical" /> },
+			{
+				name: "Projects",
+				href: "/projects",
+				icon: <IconPlant />,
+				children: (
+					<AddProjectDialog
+						open={projectDialogOpen}
+						dialogTrigger={
+							<Button
+								className="opacity-0 transition-all group-hover:opacity-100"
+								onClick={() => (projectDialogOpen.value = true)}
+							>
+								<IconLayoutGridAdd size={22} />
+							</Button>
+						}
+					/>
+				),
+			},
+			{ name: "Tasks", href: "/tasks", icon: <IconListDetails /> },
+			{ name: "Notes", href: "/notes", icon: <IconNote /> },
+		];
+
 	return (
 		<div className={cn("flex flex-col bg-crust p-sm")}>
 			<div className="flex-1">
 				<div className="flex flex-col gap-xs">
-					<Link href="/dashboard">
-						<Text className="font-bold">Dashboard</Text>
-					</Link>
-
-					<div className="group flex items-center justify-between">
-						<Link href="/inbox" className="flex-1">
-							<Text className="font-bold">Inbox</Text>
-						</Link>
-						<Button className="opacity-0 transition-all group-hover:opacity-100">
-							<IconMailPlus size={22} />
-						</Button>
-					</div>
-					<Separator orientation="vertical" />
-
-					<div className="group flex items-center justify-between">
-						<Link href="/projects" className="flex-1">
-							<Text className="font-bold">Projects</Text>
-						</Link>
-
-						<AddProjectDialog
-							open={projectDialogOpen}
-							dialogTrigger={
-								<Button
-									className="opacity-0 transition-all group-hover:opacity-100"
-									onClick={() =>
-										(projectDialogOpen.value = true)
-									}
+					{links.map((link) =>
+						link.separator === undefined ? (
+							<div className="group flex items-center justify-between">
+								<Link
+									href={link.href}
+									className={cn(
+										"flex items-center gap-xs",
+										location.includes(link.href) &&
+										"text-primary",
+									)}
 								>
-									<IconLayoutGridAdd size={22} />
-								</Button>
-							}
-						/>
-					</div>
+									{link.icon}
+									<Text className="font-bold">
+										{link.name}
+									</Text>
+								</Link>
 
-					<Link href="/tasks">
-						<Text className="font-bold">Tasks</Text>
-					</Link>
-
-					<Link href="/notes">
-						<Text className="font-bold">Notes</Text>
-					</Link>
-					<Separator orientation="vertical" />
+								{link.children}
+							</div>
+						) : (
+							<Separator orientation="vertical" />
+						),
+					)}
 				</div>
 			</div>
 
