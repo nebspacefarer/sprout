@@ -3,15 +3,9 @@ import Card from "#ui/Card";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { taskStatuses } from "#utils/status";
-import type { Project, Task } from "#utils/types";
+import type { Task } from "#utils/types";
 
-export default function TasksListing({
-    tasks,
-    project,
-}: {
-    tasks: Signal<Task[]>;
-    project: Signal<Project>;
-}) {
+export default function TasksListing({ tasks }: { tasks: Signal<Task[]> }) {
     return (
         <div className="flex w-full flex-col gap-xs">
             {tasks.value.map((task: Task) => (
@@ -28,7 +22,6 @@ export default function TasksListing({
                         </Text>
                         <Text className="font-semibold">{task.title}</Text>
                     </div>
-
                     <div className="flex items-center gap-sm">
                         <Text>{task.assigneesId?.join(", ")}</Text>
                         <Show when={task.dueAt !== undefined}>
@@ -39,9 +32,7 @@ export default function TasksListing({
             ))}
 
             <Show when={tasks.value.length === 0}>
-                <Text className="text-muted">
-                    No task found for {project.value?.title}.
-                </Text>
+                <Text className="text-muted">No task found.</Text>
             </Show>
         </div>
     );

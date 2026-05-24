@@ -1,6 +1,7 @@
 import "./App.css";
 import { Toast } from "@base-ui/react";
 import { Route, Switch } from "wouter";
+import DashboardPage from "#pages/DashboardPage";
 import HomePage from "#pages/HomePage";
 import InboxPage from "#pages/InboxPage";
 import ProjectPage from "#pages/ProjectPage";
@@ -22,6 +23,10 @@ const App = () => {
 						<div className="p-sm">
 							<Switch>
 								<Route path="/" component={HomePage} />
+								<Route
+									path="/dashboard"
+									component={DashboardPage}
+								/>
 								<Route path="/inbox" component={InboxPage} />
 								<Route
 									path="/projects"
