@@ -8,10 +8,12 @@ import Field from "#ui/Field";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { postLogin } from "#utils/fetch";
+import type { PublicUser } from "#utils/types";
 
 interface DialogProps extends BaseHTMLAttributes<HTMLBaseElement> {
     open: Signal<boolean>;
     dialogTrigger?: ComponentChildren;
+    callback?: (user: PublicUser) => void;
 }
 
 export default function LoginDialog(props: DialogProps) {
@@ -47,6 +49,9 @@ export default function LoginDialog(props: DialogProps) {
         });
 
         props.open.value = false;
+
+        props.callback(data.user);
+
         navigate("/dashboard");
     }
 

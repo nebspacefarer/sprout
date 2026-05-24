@@ -77,7 +77,7 @@ export default function Sidebar() {
 			</div>
 
 			<Show when={!user.value}>
-				<Disconnected />
+				<Disconnected user={user} />
 			</Show>
 			<Show when={user.value !== null}>
 				<Connected user={user} />
@@ -86,7 +86,7 @@ export default function Sidebar() {
 	);
 }
 
-function Disconnected() {
+function Disconnected({ user }: { user: Signal<PublicUser> }) {
 	const loginDialogOpen = useSignal<boolean>(false);
 	const registerDialogOpen = useSignal<boolean>(false);
 
@@ -99,7 +99,10 @@ function Disconnected() {
 				Register
 			</Button>
 
-			<LoginDialog open={loginDialogOpen} />
+			<LoginDialog
+				open={loginDialogOpen}
+				callback={(updatedUser) => (user.value = updatedUser)}
+			/>
 			<RegisterDialog open={registerDialogOpen} />
 		</div>
 	);
@@ -124,6 +127,8 @@ function Connected({ user }: { user: Signal<PublicUser> }) {
 		toastManager.add({
 			description: "Logged out successfully. Be back soon!",
 		});
+
+		user.value = null;
 	}
 
 	return (
