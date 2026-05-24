@@ -135,6 +135,12 @@ export async function postProject(project: Project) {
 
 // TASKS
 
+export async function getTasks() {
+    return await callApi(`${url}/tasks`, {
+        credentials: "include",
+    });
+}
+
 export async function postTask(task: Task) {
     return await callApi(`${url}/tasks`, {
         method: "POST",

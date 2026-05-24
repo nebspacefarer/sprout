@@ -4,6 +4,27 @@ import { authPreHandler } from "../plugins/authPreHandler";
 import type { RequestBody } from "../utils/requestTypes";
 
 const tasks: FastifyPluginAsync = async (fastify): Promise<void> => {
+    fastify.get(
+        "/api/tasks",
+        { preHandler: authPreHandler },
+        async (request, reply: FastifyReply) => {
+            let tasks: Task[] = fastify.db().tasks.query().find();
+
+            for (const task of tasks) {
+                if (
+                    task.userId !== request.auth?._id ||
+                    !task.assigneesId?.includes(request.auth?._id as string)
+                ) {
+                    tasks = [...tasks.filter((t) => t._id === task._id)];
+                }
+            }
+
+            return reply.code(200).send({
+                tasks: tasks,
+            });
+        },
+    );
+
     fastify.post<RequestBody>(
         "/api/tasks",
         { preHandler: authPreHandler },
