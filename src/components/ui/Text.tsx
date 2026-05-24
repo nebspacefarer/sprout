@@ -16,6 +16,7 @@ export default function Text(props: TextProps) {
 				props.size === "sm" && "text-sm",
 				props.className,
 			)}
+			style={props.style}
 		>
 			{props.children}
 		</p>
