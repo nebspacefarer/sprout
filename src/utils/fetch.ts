@@ -16,18 +16,32 @@ async function callApi(path: string, options?: RequestInit) {
                 credentials: "include",
             });
 
-            const _refreshData = await refreshResult.json();
-            // TODO: Cannot refresh tokens case
+            const refreshData = await refreshResult.json();
+            if (refreshData.err) {
+                localStorage.setItem("user", null);
+                navigate("/", { replace: true });
+            }
+            localStorage.setItem("user", JSON.stringify(refreshData.user));
 
             // Resend origin request
             result = await fetch(path, options);
             data = await result.json();
+
+            if (data.err) {
+                localStorage.setItem("user", null);
+                navigate("/", { replace: true });
+            }
         }
 
         if (data.err.code === "FST_JWT_NO_AUTHORIZATION_IN_COOKIE") {
             data = { err: "Not logged in." };
+            localStorage.setItem("user", null);
             navigate("/", { replace: true });
         }
+    }
+
+    if (data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
     }
 
     return data;
@@ -49,6 +63,7 @@ export async function postRegister(
         }),
     });
 }
+
 export async function postLogin(email: string, password: string) {
     return await callApi(`${url}/auth/login`, {
         method: "POST",
@@ -58,6 +73,18 @@ export async function postLogin(email: string, password: string) {
             password: password,
         }),
     });
+}
+
+export async function postLogout() {
+    const data = await callApi(`${url}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+    });
+
+    localStorage.setItem("user", null);
+    navigate("/", { replace: true });
+
+    return data;
 }
 
 // INBOX

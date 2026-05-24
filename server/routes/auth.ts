@@ -2,6 +2,8 @@ import type { CookieSerializeOptions } from "@fastify/cookie";
 import type { DecodePayloadType } from "@fastify/jwt";
 import { compare, hash } from "bcryptjs";
 import type { FastifyPluginAsync, FastifyReply } from "fastify";
+import type { PublicUser, User } from "../../src/utils/types";
+import { authPreHandler } from "../plugins/authPreHandler";
 import type { RequestBody } from "../utils/requestTypes";
 
 const auth: FastifyPluginAsync = async (fastify): Promise<void> => {
@@ -70,7 +72,37 @@ const auth: FastifyPluginAsync = async (fastify): Promise<void> => {
                 .setCookie("token", token, cookieOptions)
                 .code(200)
                 .send({
+                    user: updatedUser,
                     message: "Login successful",
+                });
+        },
+    );
+
+    fastify.post(
+        "/api/auth/logout",
+        { preHandler: authPreHandler },
+        async (request, reply) => {
+            const users = fastify
+                .db()
+                .users.query()
+                .equalTo("_id", request.auth?._id)
+                .find();
+
+            if (!users) {
+                return reply.code(404).send({ err: "User not found." });
+            }
+
+            const user: User = users[0];
+            user.token = undefined;
+
+            fastify.db().users.update(request.auth?._id, user);
+
+            return reply
+                .code(200)
+                .clearCookie("token")
+                .clearCookie("refresh")
+                .send({
+                    message: "Logged out successfully.",
                 });
         },
     );
@@ -88,7 +120,23 @@ const auth: FastifyPluginAsync = async (fastify): Promise<void> => {
             // Verify Refresh Token Validity
             fastify.jwt.verify(refreshToken, { maxAge: "1m" });
 
+            const decoded = fastify.jwt.decode(
+                refreshToken,
+            ) as DecodePayloadType & { id: string };
+            const users = fastify
+                .db()
+                .users.query()
+                .equalTo("_id", decoded.id)
+                .find();
+
+            if (!users) {
+                return reply.code(401).send({
+                    err: "User not found with tokens.",
+                });
+            }
+
             return reply.code(200).send({
+                user: users[0] as PublicUser,
                 message: "Refresh token valid.",
             });
         } catch (err) {
@@ -108,12 +156,25 @@ const auth: FastifyPluginAsync = async (fastify): Promise<void> => {
                     { expiresIn: "1 day" },
                 );
 
+                const users = fastify
+                    .db()
+                    .users.query()
+                    .equalTo("_id", decoded.id)
+                    .find();
+
+                if (!users) {
+                    return reply.code(401).send({
+                        err: "User not found with tokens.",
+                    });
+                }
+
                 // Send Response
                 return reply
                     .setCookie("token", token, cookieOptions)
                     .setCookie("refresh", refresh, cookieOptions)
                     .code(200)
                     .send({
+                        user: users[0] as PublicUser,
                         message: "Refresh token rotated.",
                     });
             }
