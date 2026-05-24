@@ -15,9 +15,7 @@ export default function TasksListing({
         <div className="flex w-full flex-col gap-xs">
             {tasks.value.map((task: Task) => (
                 <Card className="flex items-center gap-sm bg-surface" small>
-                    <Text className="text-sm">
-                        {project.value.tasksStatus[task.status].toUpperCase()}
-                    </Text>
+                    <Text className="text-sm">{task.status}</Text>
                     <Text className="font-semibold">{task.title}</Text>
                     <Text>{task.assigneesId?.join(", ")}</Text>
                     <Show when={task.dueAt !== undefined}>

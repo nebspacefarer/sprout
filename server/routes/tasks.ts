@@ -1,11 +1,17 @@
 import type { FastifyPluginAsync, FastifyReply } from "fastify";
+import type { Task } from "../../src/utils/types";
+import { authPreHandler } from "../plugins/authPreHandler";
 import type { RequestBody } from "../utils/requestTypes";
 
 const tasks: FastifyPluginAsync = async (fastify): Promise<void> => {
     fastify.post<RequestBody>(
         "/api/tasks",
+        { preHandler: authPreHandler },
         async (request, reply: FastifyReply) => {
-            const task = JSON.parse(request.body);
+            const task: Task = JSON.parse(request.body);
+
+            task.userId = request.auth?._id as string;
+            task.assigneesId = [request.auth?._id as string];
 
             const result = fastify.db().tasks.insert(task);
 
@@ -17,6 +23,7 @@ const tasks: FastifyPluginAsync = async (fastify): Promise<void> => {
 
     fastify.put<RequestBody>(
         "/api/tasks",
+        { preHandler: authPreHandler },
         async (request, reply: FastifyReply) => {
             const task = JSON.parse(request.body);
 
@@ -32,6 +39,7 @@ const tasks: FastifyPluginAsync = async (fastify): Promise<void> => {
 
     fastify.delete<RequestBody>(
         "/api/tasks",
+        { preHandler: authPreHandler },
         async (request, reply: FastifyReply) => {
             const { _id } = JSON.parse(request.body);
 
