@@ -21,6 +21,7 @@ import { cn } from "#utils/cn";
 import { taskStatuses } from "#utils/status";
 import { toFallback } from "#utils/strings";
 import type { ProjectData, Task } from "#utils/types";
+import TaskContextMenu from "./TaskContextMenu";
 
 export default function LayoutList({
     projectsSelected,
@@ -43,12 +44,21 @@ export default function LayoutList({
                 switch (layout.value) {
                     default:
                         return (
-                            <ListTask
-                                projectsSelected={projectsSelected}
-                                task={task}
+                            <TaskContextMenu
+                                trigger={
+                                    <ListTask
+                                        projectsSelected={projectsSelected}
+                                        task={task}
+                                        deleteTask={() => deleteTask(task)}
+                                        taskDialogOpen={taskDialogOpen}
+                                        editedTask={editedTask}
+                                    />
+                                }
                                 deleteTask={() => deleteTask(task)}
-                                taskDialogOpen={taskDialogOpen}
+                                task={task}
                                 editedTask={editedTask}
+                                projectsSelected={projectsSelected}
+                                taskDialogOpen={taskDialogOpen}
                             />
                         );
                 }
@@ -81,7 +91,7 @@ function ListTask({
 
     return (
         <Card
-            className="justify-between border-l-4 bg-surface font-semibold"
+            className="w-full justify-between border-l-4 bg-surface font-semibold"
             style={{ borderLeftColor: taskStatuses[task.status].color }}
             small
         >
