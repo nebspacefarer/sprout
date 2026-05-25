@@ -15,7 +15,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
+  <a href="https://github.com/NebSpacefarer/sprout">
     <!-- <img src="images/logo.png" alt="Logo" width="80" height="80"> -->
     🌱
   </a>
@@ -25,14 +25,14 @@
   <p align="center">
     An open-source self-hostable project manager with collaboration support.
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/NebSpacefarer/sprout"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    <a href="https://github.com/NebSpacefarer/sprout">View Demo</a>
     &middot;
-    <a href="https://github.com/github_username/repo_name/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    <a href="https://github.com/NebSpacefarer/sprout/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     &middot;
-    <a href="https://github.com/github_username/repo_name/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <a href="https://github.com/NebSpacefarer/sprout/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 </div>
 
@@ -130,7 +130,9 @@ To get a local copy up and running follow these simple example steps.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Once installation is complete, your very own Sprout instance should be available by default at http://localhost:3535 . This is susceptible to change if you have customized your instance with a custom port, or if you apply a reverse proxy to the web app.
+Once installation is complete, your very own Sprout instance should be available by default at http://localhost:3535 .
+
+This is susceptible to change if you have customized your instance with a custom port, or if you apply a reverse proxy to the web app.
 
 _For more guides and examples, please refer to the [Documentation](https://sprout.nebspacefarer.com/docs)_
 
@@ -188,11 +190,11 @@ Distributed under the **MIT License**. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-NebSpacefarer - [@Nebspacefarer](https://bsky.app/profile/nebspacefarer.bsky.social) - contact .at. nebspacefarer .dot. com
+**NebSpacefarer** - [@Nebspacefarer](https://bsky.app/profile/nebspacefarer.bsky.social) - contact .at. nebspacefarer .dot. com
 
-Project Link: [https://github.com/NebSpacefarer/sprout](https://github.com/NebSpacefarer/sprout)
+**Project Link:** [https://github.com/NebSpacefarer/sprout](https://github.com/NebSpacefarer/sprout)
 
-Discord Community: [https://discord.com/invite/...](https://discord.com/invite/...)
+**Discord Community:** [https://discord.com/invite/...](https://discord.com/invite/...)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -211,16 +213,16 @@ Discord Community: [https://discord.com/invite/...](https://discord.com/invite/.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
-[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
-[forks-url]: https://github.com/github_username/repo_name/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/repo_name/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
-[issues-url]: https://github.com/github_username/repo_name/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/NebSpacefarer/sprout.svg?style=for-the-badge
+[contributors-url]: https://github.com/NebSpacefarer/sprout/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/NebSpacefarer/sprout.svg?style=for-the-badge
+[forks-url]: https://github.com/NebSpacefarer/sprout/network/members
+[stars-shield]: https://img.shields.io/github/stars/NebSpacefarer/sprout.svg?style=for-the-badge
+[stars-url]: https://github.com/NebSpacefarer/sprout/stargazers
+[issues-shield]: https://img.shields.io/github/issues/NebSpacefarer/sprout.svg?style=for-the-badge
+[issues-url]: https://github.com/NebSpacefarer/sprout/issues
+[license-shield]: https://img.shields.io/github/license/NebSpacefarer/sprout.svg?style=for-the-badge
+[license-url]: https://github.com/NebSpacefarer/sprout/blob/master/LICENSE.txt
 [product-screenshot]: images/screenshot.png
 <!-- Shields.io badges. You can a comprehensive list with many more badges at: https://github.com/inttter/md-badges -->
 [Preact.js]: https://img.shields.io/badge/Preact-4D3187?style=for-the-badge&logo=preact&logoColor=FFFFFF
