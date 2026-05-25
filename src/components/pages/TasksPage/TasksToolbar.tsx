@@ -25,6 +25,7 @@ export default function TasksToolbar({
 	search,
 	checkedFields,
 	sort,
+	layout,
 }: {
 	projects: Signal<ProjectData[]>;
 	projectsSelected: Signal<ProjectData[]>;
@@ -36,7 +37,8 @@ export default function TasksToolbar({
 		tags: true;
 		timetrack: true;
 	}>;
-	sort: Signal;
+	sort: Signal<string>;
+	layout: Signal<string[]>;
 }) {
 	function isProjectSelected(project: ProjectData) {
 		return (
@@ -94,7 +96,7 @@ export default function TasksToolbar({
 				horizontal
 			/>
 
-			<ToggleGroup defaultValue={["section"]}>
+			<ToggleGroup defaultValue={["section"]} value={layout}>
 				<Toggle value="section" title="Layout: Section">
 					<IconSection />
 				</Toggle>

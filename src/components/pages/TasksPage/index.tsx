@@ -26,7 +26,7 @@ export default function TasksPage() {
         tags: true,
         timetrack: true,
     });
-    const layout = useSignal<string>("section");
+    const layout = useSignal<string[]>(["section"]);
     const sort = useSignal<string>("createdAt");
     const addTaskProjectField = useSignal<string>("");
     const addTaskField = useSignal<string>("");
@@ -133,6 +133,7 @@ export default function TasksPage() {
                 search={search}
                 checkedFields={checkedFields}
                 sort={sort}
+                layout={layout}
             />
 
             <div className="flex flex-col gap-xs">

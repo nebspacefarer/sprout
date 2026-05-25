@@ -2,6 +2,7 @@ import { type Signal, useSignal } from "@preact/signals";
 import { useEffect } from "preact/hooks";
 import { taskStatuses } from "#utils/status";
 import type { ProjectData, Task } from "#utils/types";
+import LayoutList from "./LayoutList";
 import LayoutSection from "./LayoutSection";
 
 export default function TasksListing({
@@ -11,7 +12,7 @@ export default function TasksListing({
     taskDialogOpen,
     editedTask,
 }: {
-    layout: Signal<string>;
+    layout: Signal<string[]>;
     projectsSelected: Signal<ProjectData[]>;
     deleteTask: (task: Task) => void;
     taskDialogOpen: Signal<boolean>;
@@ -32,17 +33,32 @@ export default function TasksListing({
 
     return (
         <div className="flex flex-col gap-sm bg-crust">
-            {taskStatuses.map((s) => (
-                <LayoutSection
+            {layout.value.includes("section") &&
+                taskStatuses.map(
+                    (s) =>
+                        layout.value.includes("section") && (
+                            <LayoutSection
+                                projectsSelected={projectsSelected}
+                                status={s}
+                                tasks={tasks}
+                                layout={layout}
+                                deleteTask={deleteTask}
+                                editedTask={editedTask}
+                                taskDialogOpen={taskDialogOpen}
+                            />
+                        ),
+                )}
+
+            {layout.value.includes("list") && (
+                <LayoutList
                     projectsSelected={projectsSelected}
-                    status={s}
                     tasks={tasks}
                     layout={layout}
                     deleteTask={deleteTask}
                     editedTask={editedTask}
                     taskDialogOpen={taskDialogOpen}
                 />
-            ))}
+            )}
         </div>
     );
 }

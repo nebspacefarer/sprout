@@ -16,12 +16,12 @@ import Show from "#ui/Show";
 import Tag from "#ui/Tag";
 import Text from "#ui/Text";
 import { cn } from "#utils/cn";
+import { taskStatuses } from "#utils/status";
 import { toFallback } from "#utils/strings";
-import type { ProjectData, Status, Task } from "#utils/types";
+import type { ProjectData, Task } from "#utils/types";
 
-export default function LayoutSection({
+export default function LayoutList({
     projectsSelected,
-    status,
     layout,
     tasks,
     deleteTask,
@@ -29,7 +29,6 @@ export default function LayoutSection({
     editedTask,
 }: {
     projectsSelected: Signal<ProjectData[]>;
-    status: Status;
     layout: Signal<string[]>;
     tasks: Signal<Task[]>;
     deleteTask: (task: Task) => void;
@@ -38,35 +37,25 @@ export default function LayoutSection({
 }) {
     return (
         <div>
-            <div
-                className="w-full rounded-md px-xs py-1 text-primary-foreground"
-                style={{ backgroundColor: status.color }}
-            >
-                <Text className="font-semibold text-lg">{status.title}</Text>
-            </div>
-            <div>
-                {tasks.value
-                    ?.filter((t) => t.status === status.id)
-                    .map((task: Task) => {
-                        switch (layout.value) {
-                            default:
-                                return (
-                                    <SectionTask
-                                        projectsSelected={projectsSelected}
-                                        task={task}
-                                        deleteTask={() => deleteTask(task)}
-                                        taskDialogOpen={taskDialogOpen}
-                                        editedTask={editedTask}
-                                    />
-                                );
-                        }
-                    })}
-            </div>
+            {tasks.value.map((task: Task) => {
+                switch (layout.value) {
+                    default:
+                        return (
+                            <ListTask
+                                projectsSelected={projectsSelected}
+                                task={task}
+                                deleteTask={() => deleteTask(task)}
+                                taskDialogOpen={taskDialogOpen}
+                                editedTask={editedTask}
+                            />
+                        );
+                }
+            })}
         </div>
     );
 }
 
-function SectionTask({
+function ListTask({
     projectsSelected,
     task,
     deleteTask,
@@ -90,57 +79,57 @@ function SectionTask({
 
     return (
         <Card className="justify-between bg-surface font-semibold" small>
-            <div className="flex w-full gap-xs">
+            <div className="flex items-center gap-xs">
                 <Button className="bg-unset text-muted hover:text-success">
                     <IconCheck />
                 </Button>
 
                 <Button
-                    className="group flex flex-1 flex-col items-start gap-1 bg-unset text-unset"
+                    className="group flex flex-1 items-center gap-sm bg-unset text-unset"
                     onClick={() => editTask()}
                 >
-                    <div className="flex items-center gap-xs">
-                        <Show when={projectsSelected.value.length > 1}>
-                            <Text className="text-muted">
-                                {projectData.project.title}
-                            </Text>
-                        </Show>
+                    <Text
+                        className="text-sm uppercase"
+                        style={{ color: taskStatuses[task.status].color }}
+                    >
+                        {taskStatuses[task.status].title}
+                    </Text>
 
-                        <Text className="border-surface border-b transition-all group-hover:border-primary">
-                            {task.title}
+                    <Show when={projectsSelected.value.length > 1}>
+                        <Text className="text-muted">
+                            {projectData.project.title}
                         </Text>
+                    </Show>
 
-                        <Show when={task.content !== undefined}>
-                            <IconNote
-                                className="text-muted"
-                                title="Read more..."
-                            />
-                        </Show>
+                    <Text className="border-surface border-b transition-all group-hover:border-primary">
+                        {task.title}
+                    </Text>
 
-                        <Show when={task.dueAt !== undefined}>
-                            <Text className="text-sm">
-                                Due Date: {task.dueAt}
-                            </Text>
-                        </Show>
+                    <Show when={task.content !== undefined}>
+                        <IconNote className="text-muted" title="Read more..." />
+                    </Show>
 
-                        <IconFlag
-                            size={16}
-                            className={cn(
-                                task.priority === 0 && "text-muted",
-                                task.priority === 1 && "text-success",
-                                task.priority === 2 && "text-warning",
-                                task.priority === 3 && "text-danger",
-                            )}
-                            title={`Priority ${task.priority}`}
-                        />
+                    <Show when={task.dueAt !== undefined}>
+                        <Text className="text-sm">Due Date: {task.dueAt}</Text>
+                    </Show>
 
-                        <div className="flex items-center gap-xs">
-                            {task.tags?.map((tag) => (
-                                <Tag className="border border-border bg-crust">
-                                    #{tag.name}
-                                </Tag>
-                            ))}
-                        </div>
+                    <IconFlag
+                        size={16}
+                        className={cn(
+                            task.priority === 0 && "text-muted",
+                            task.priority === 1 && "text-success",
+                            task.priority === 2 && "text-warning",
+                            task.priority === 3 && "text-danger",
+                        )}
+                        title={`Priority ${task.priority}`}
+                    />
+
+                    <div className="flex items-center gap-xs">
+                        {task.tags?.map((tag) => (
+                            <Tag className="border border-border bg-crust">
+                                #{tag.name}
+                            </Tag>
+                        ))}
                     </div>
                 </Button>
             </div>
