@@ -16,7 +16,7 @@ import Link from "#ui/Link";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { getProjects, getTasks } from "#utils/fetch";
-import type { Project, PublicUser, Task } from "#utils/types";
+import type { ProjectData, PublicUser, Task } from "#utils/types";
 import ProjectsListing from "./ProjectsListing";
 import TasksListing from "./TasksListing";
 
@@ -24,7 +24,7 @@ export default function DashboardPage() {
     const user = useSignal<PublicUser | null>(
         JSON.parse(localStorage.getItem("user")),
     );
-    const projects = useSignal<Project[]>([]);
+    const projects = useSignal<ProjectData[]>([]);
     const tasks = useSignal<Task[]>([]);
 
     useEffect(() => {
