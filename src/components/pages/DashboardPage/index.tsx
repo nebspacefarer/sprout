@@ -7,6 +7,7 @@ import {
     IconListDetails,
     IconNote,
 } from "@tabler/icons-preact";
+import { format } from "date-fns";
 import { useEffect } from "preact/hooks";
 import Page from "src/components/Page";
 import Avatar from "#ui/Avatar";
@@ -41,7 +42,7 @@ export default function DashboardPage() {
 
     return (
         <Page pageTitle="Dashboard" pageIcon={<IconDashboard />} auth>
-            <Card className="justify-center">
+            <Card className="flex-col justify-center">
                 <div className="flex items-center gap-xs font-semibold text-2xl">
                     <IconButterfly size={32} />
                     <Text className="italic">Welcome back,</Text>
@@ -59,6 +60,10 @@ export default function DashboardPage() {
                         </Text>
                     </div>
                 </div>
+
+                <Text className="font-semibold text-xl">
+                    {format(new Date(), " EEEE do, MMMM yyyy")}
+                </Text>
             </Card>
 
             <div className="flex gap-sm">
