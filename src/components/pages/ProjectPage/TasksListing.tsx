@@ -17,7 +17,7 @@ export default function TasksListing({
 }) {
     return (
         <div className="flex w-full flex-col gap-xs">
-            {tasks.value.map((task: Task) => (
+            {tasks.value?.map((task: Task) => (
                 <Card
                     className="flex items-center justify-between bg-surface"
                     small
@@ -38,18 +38,23 @@ export default function TasksListing({
                         ))}
 
                         <Show when={task.dueAt !== undefined}>
-                            <div
-                                className="flex items-center gap-1"
-                                title={
-                                    "Due: " +
-                                    format(task.dueAt, "MM/dd/yyyy HH:mm")
-                                }
-                            >
-                                <IconCalendarExclamation />
-                                <Text>
-                                    {formatDistance(new Date(), task.dueAt)}
-                                </Text>
-                            </div>
+                            {task.dueAt !== undefined && (
+                                <div
+                                    className="flex items-center gap-1"
+                                    title={
+                                        "Due: " +
+                                        format(
+                                            new Date(task.dueAt),
+                                            "MM/dd/yyyy - HH:mm",
+                                        )
+                                    }
+                                >
+                                    <IconCalendarExclamation />
+                                    <Text>
+                                        {formatDistance(new Date(), task.dueAt)}
+                                    </Text>
+                                </div>
+                            )}
                         </Show>
                     </div>
                 </Card>

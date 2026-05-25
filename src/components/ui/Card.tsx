@@ -13,10 +13,12 @@ export default function Card(props: CardProps) {
     return (
         <div
             className={cn(
-                "flex items-center gap-sm rounded-xl bg-crust",
+                "flex items-center rounded-xl bg-crust",
                 props.small ? "px-sm py-xs" : "p-sm",
                 props.className,
-                props.orientation === "col" && "flex-col items-start",
+                props.orientation === "col"
+                    ? "flex-col items-start gap-1"
+                    : "gap-sm",
             )}
         >
             {props.children}

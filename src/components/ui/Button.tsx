@@ -1,8 +1,13 @@
-import { Button as BaseButton } from "@base-ui/react/button";
-import type { ButtonHTMLAttributes } from "preact";
+import { Button as BaseButton, type ButtonState } from "@base-ui/react/button";
+import type {
+	BaseUIComponentProps,
+	NativeButtonProps,
+} from "@base-ui/react/internals/types";
 import { cn } from "#utils/cn";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLBaseElement> {
+interface ButtonProps
+	extends NativeButtonProps,
+	BaseUIComponentProps<"button", ButtonState> {
 	onClick?: (event: MouseEvent) => void;
 }
 
@@ -14,6 +19,7 @@ export default function Button(props: ButtonProps) {
 				props.className,
 			)}
 			onClick={props.onClick}
+			style={props.style}
 		>
 			{props.children}
 		</BaseButton>

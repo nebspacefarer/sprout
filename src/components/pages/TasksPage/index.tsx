@@ -77,23 +77,19 @@ export default function TasksPage() {
         const data = await postTask(task);
 
         const project = projects.value.find(
-            (p) => p.project._id === addTaskProjectField.value,
+            (p) => p.project._id === data.task.projectId,
         );
 
         project.tasks = [...project.tasks, data.task];
 
-        if (
-            projectsSelected.value.find(
-                (p) => p.project._id === project.project._id,
-            )
-        ) {
-            projectsSelected.value = [
-                ...projectsSelected.value.filter(
-                    (p) => p.project._id !== project.project._id,
-                ),
-                project,
-            ];
-        }
+        projectsSelected.value = [
+            ...projectsSelected.value.filter(
+                (p) => p.project._id !== data.task.projectId,
+            ),
+            project,
+        ];
+
+        console.log(projectsSelected.value);
 
         toastManager.add({
             description: "Task created successfully!",

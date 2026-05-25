@@ -20,6 +20,7 @@ import Text from "#ui/Text";
 import { cn } from "#utils/cn";
 import { toFallback } from "#utils/strings";
 import type { ProjectData, Status, Task } from "#utils/types";
+import TaskContextMenu from "./TaskContextMenu";
 
 export default function LayoutSection({
     projectsSelected,
@@ -53,12 +54,25 @@ export default function LayoutSection({
                         switch (layout.value) {
                             default:
                                 return (
-                                    <SectionTask
-                                        projectsSelected={projectsSelected}
-                                        task={task}
+                                    <TaskContextMenu
+                                        trigger={
+                                            <SectionTask
+                                                projectsSelected={
+                                                    projectsSelected
+                                                }
+                                                task={task}
+                                                deleteTask={() =>
+                                                    deleteTask(task)
+                                                }
+                                                taskDialogOpen={taskDialogOpen}
+                                                editedTask={editedTask}
+                                            />
+                                        }
                                         deleteTask={() => deleteTask(task)}
-                                        taskDialogOpen={taskDialogOpen}
+                                        task={task}
                                         editedTask={editedTask}
+                                        projectsSelected={projectsSelected}
+                                        taskDialogOpen={taskDialogOpen}
                                     />
                                 );
                         }
@@ -91,7 +105,7 @@ function SectionTask({
     );
 
     return (
-        <Card className="justify-between bg-surface font-semibold" small>
+        <Card className="w-full justify-between bg-surface font-semibold" small>
             <div className="flex w-full gap-xs">
                 <Button className="bg-unset text-muted hover:text-success">
                     <IconCheck />
@@ -120,18 +134,20 @@ function SectionTask({
                         </Show>
 
                         <Show when={task.dueAt !== undefined}>
-                            <div
-                                className="flex items-center gap-1 px-xs text-sm"
-                                title={
-                                    "Due: " +
-                                    format(task.dueAt, "MM/dd/yyyy HH:mm")
-                                }
-                            >
-                                <IconCalendarExclamation />
-                                <Text>
-                                    {formatDistance(new Date(), task.dueAt)}
-                                </Text>
-                            </div>
+                            {task.dueAt !== undefined && (
+                                <div
+                                    className="flex items-center gap-1 px-xs text-sm"
+                                    title={
+                                        "Due: " +
+                                        format(task.dueAt, "MM/dd/yyyy HH:mm")
+                                    }
+                                >
+                                    <IconCalendarExclamation />
+                                    <Text>
+                                        {formatDistance(new Date(), task.dueAt)}
+                                    </Text>
+                                </div>
+                            )}
                         </Show>
 
                         <IconFlag

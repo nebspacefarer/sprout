@@ -112,17 +112,20 @@ function ListTask({
                     </Show>
 
                     <Show when={task.dueAt !== undefined}>
-                        <div
-                            className="flex items-center gap-1 px-xs text-sm"
-                            title={
-                                "Due: " + format(task.dueAt, "MM/dd/yyyy HH:mm")
-                            }
-                        >
-                            <IconCalendarExclamation />
-                            <Text>
-                                {formatDistance(new Date(), task.dueAt)}
-                            </Text>
-                        </div>
+                        {task.dueAt !== undefined && (
+                            <div
+                                className="flex items-center gap-1 px-xs text-sm"
+                                title={
+                                    "Due: " +
+                                    format(task.dueAt, "MM/dd/yyyy HH:mm")
+                                }
+                            >
+                                <IconCalendarExclamation />
+                                <Text>
+                                    {formatDistance(new Date(), task.dueAt)}
+                                </Text>
+                            </div>
+                        )}
                     </Show>
 
                     <IconFlag

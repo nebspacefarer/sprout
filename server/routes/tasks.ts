@@ -48,6 +48,18 @@ const tasks: FastifyPluginAsync = async (fastify): Promise<void> => {
             task.userId = request.auth?._id as string;
             task.assigneesId = [request.auth?._id as string];
 
+            const users: PublicUser[] = fastify.db().users.query().find();
+            task.assignees = [];
+
+            for (const assigneeId of task.assigneesId) {
+                const assigneeUser = users.find(
+                    (u) => u._id === assigneeId,
+                ) as PublicUser;
+                task.assignees.push(assigneeUser);
+            }
+
+            task.user = users.find((u) => u._id === task.userId);
+
             const result = fastify.db().tasks.insert(task);
 
             return reply.code(200).send({
