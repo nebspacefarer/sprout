@@ -1,5 +1,6 @@
 import { useSignal } from "@preact/signals";
-import { IconDots, IconPlant } from "@tabler/icons-preact";
+import { IconCalendarTime, IconDots, IconPlant } from "@tabler/icons-preact";
+import { format } from "date-fns";
 import { useEffect } from "preact/hooks";
 import { useLocation } from "wouter";
 import Show from "#ui/Show";
@@ -95,9 +96,17 @@ function ProjectCard({ project }: { project: Project }) {
                         <Tag className="bg-muted">{tag.name}</Tag>
                     ))}
                 </div>
-                <Text className="text-sm">
-                    Last update: {project.updatedAt}
-                </Text>
+
+                <div className="flex items-center gap-xs pt-xs">
+                    <div className="flex items-center gap-1">
+                        <IconCalendarTime />
+                        <Text className="font-semibold">Last update:</Text>
+                    </div>
+
+                    <Text className="font-normal text-sm">
+                        {format(project.updatedAt, "MM/dd/yyyy - HH:mm")}
+                    </Text>
+                </div>
             </div>
         </Card>
     );

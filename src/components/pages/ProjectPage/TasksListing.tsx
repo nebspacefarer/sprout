@@ -1,4 +1,6 @@
 import type { Signal } from "@preact/signals";
+import { IconCalendarExclamation } from "@tabler/icons-preact";
+import { format, formatDistance } from "date-fns";
 import Avatar from "#ui/Avatar";
 import Card from "#ui/Card";
 import Show from "#ui/Show";
@@ -36,7 +38,18 @@ export default function TasksListing({
                         ))}
 
                         <Show when={task.dueAt !== undefined}>
-                            <Text>Due: {task.dueAt}</Text>
+                            <div
+                                className="flex items-center gap-1"
+                                title={
+                                    "Due: " +
+                                    format(task.dueAt, "MM/dd/yyyy HH:mm")
+                                }
+                            >
+                                <IconCalendarExclamation />
+                                <Text>
+                                    {formatDistance(new Date(), task.dueAt)}
+                                </Text>
+                            </div>
                         </Show>
                     </div>
                 </Card>

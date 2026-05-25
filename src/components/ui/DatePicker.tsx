@@ -1,6 +1,7 @@
 import { DayPicker } from "@daypicker/react";
 import "@daypicker/react/style.css";
 import { type Signal, useSignal } from "@preact/signals";
+import { format } from "date-fns";
 import type { BaseHTMLAttributes } from "preact";
 import { cn } from "#utils/cn";
 
@@ -23,7 +24,7 @@ export default function DatePicker(props: PickerProps) {
             }}
             footer={
                 props.selected.value
-                    ? `Selected ${props.selected.value}`
+                    ? `Selected ${format(props.selected.value, "MM/dd/yyyy - HH:mm")}`
                     : "Pick a date."
             }
             className={cn("p-xs", props.className)}

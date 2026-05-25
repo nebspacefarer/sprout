@@ -1,6 +1,7 @@
 import { useDeepSignal } from "@deepsignal/preact";
 import { type Signal, useSignal } from "@preact/signals";
 import { IconCheck, IconClockPlay, IconFlag } from "@tabler/icons-preact";
+import { format } from "date-fns";
 import type { BaseHTMLAttributes, ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { Combobox, type LabelItem } from "#ui/Combobox";
@@ -176,7 +177,10 @@ export default function EditTaskDialog(props: DialogProps) {
                             menuTitle="Created Date"
                             menuPlaceholder={
                                 dataTask.createdAt.value !== undefined
-                                    ? dataTask.createdAt
+                                    ? format(
+                                        dataTask.createdAt.value,
+                                        "MM/dd/yyyy - HH:mm",
+                                    )
                                     : "Pick a date..."
                             }
                             className="w-full"
@@ -188,7 +192,10 @@ export default function EditTaskDialog(props: DialogProps) {
                             menuTitle="Due Date"
                             menuPlaceholder={
                                 dataTask.dueAt.value !== undefined
-                                    ? dataTask.dueAt
+                                    ? format(
+                                        dataTask.dueAt.value,
+                                        "MM/dd/yyyy - HH:mm",
+                                    )
                                     : "Pick a date..."
                             }
                             className="w-full"

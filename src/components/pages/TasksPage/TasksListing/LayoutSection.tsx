@@ -1,5 +1,6 @@
 import type { Signal } from "@preact/signals";
 import {
+    IconCalendarExclamation,
     IconCheck,
     IconClockPlay,
     IconDots,
@@ -8,6 +9,7 @@ import {
     IconNote,
     IconTrashX,
 } from "@tabler/icons-preact";
+import { format, formatDistance } from "date-fns";
 import Avatar from "#ui/Avatar";
 import Button from "#ui/Button";
 import Card from "#ui/Card";
@@ -106,7 +108,7 @@ function SectionTask({
                             </Text>
                         </Show>
 
-                        <Text className="border-surface border-b transition-all group-hover:border-primary">
+                        <Text className="border-surface border-b text-normal transition-all group-hover:border-primary">
                             {task.title}
                         </Text>
 
@@ -118,9 +120,18 @@ function SectionTask({
                         </Show>
 
                         <Show when={task.dueAt !== undefined}>
-                            <Text className="text-sm">
-                                Due Date: {task.dueAt}
-                            </Text>
+                            <div
+                                className="flex items-center gap-1 px-xs text-sm"
+                                title={
+                                    "Due: " +
+                                    format(task.dueAt, "MM/dd/yyyy HH:mm")
+                                }
+                            >
+                                <IconCalendarExclamation />
+                                <Text>
+                                    {formatDistance(new Date(), task.dueAt)}
+                                </Text>
+                            </div>
                         </Show>
 
                         <IconFlag

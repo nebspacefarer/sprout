@@ -1,5 +1,6 @@
 import type { Signal } from "@preact/signals";
 import {
+    IconCalendarExclamation,
     IconCheck,
     IconClockPlay,
     IconDots,
@@ -8,6 +9,7 @@ import {
     IconNote,
     IconTrashX,
 } from "@tabler/icons-preact";
+import { format, formatDistance } from "date-fns";
 import Avatar from "#ui/Avatar";
 import Button from "#ui/Button";
 import Card from "#ui/Card";
@@ -110,7 +112,17 @@ function ListTask({
                     </Show>
 
                     <Show when={task.dueAt !== undefined}>
-                        <Text className="text-sm">Due Date: {task.dueAt}</Text>
+                        <div
+                            className="flex items-center gap-1 px-xs text-sm"
+                            title={
+                                "Due: " + format(task.dueAt, "MM/dd/yyyy HH:mm")
+                            }
+                        >
+                            <IconCalendarExclamation />
+                            <Text>
+                                {formatDistance(new Date(), task.dueAt)}
+                            </Text>
+                        </div>
                     </Show>
 
                     <IconFlag
