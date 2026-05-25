@@ -6,9 +6,16 @@ import { useEffect } from "preact/hooks";
 import { Combobox, type LabelItem } from "#ui/Combobox";
 import { MenuCheckbox } from "#ui/MenuCheckbox";
 import { cn } from "#utils/cn";
-import { updateTask } from "#utils/fetch";
+import { getProjectByIdOrName, updateTask } from "#utils/fetch";
 import { textToParam } from "#utils/strings";
-import type { ProjectData, Tag, Task, TimeTrack } from "#utils/types";
+import type {
+    Permission,
+    Project,
+    ProjectData,
+    Tag,
+    Task,
+    TimeTrack,
+} from "#utils/types";
 import Button from "../ui/Button";
 import DatePicker from "../ui/DatePicker";
 import Dialog from "../ui/Dialog";
@@ -27,9 +34,19 @@ interface DialogProps extends BaseHTMLAttributes<HTMLBaseElement> {
 
 export default function EditTaskDialog(props: DialogProps) {
     if (props.task.value !== null) {
+        const project = useSignal<Project>(null);
         const tagsItems = useSignal<LabelItem[]>([]);
 
         useEffect(() => {
+            async function init() {
+                const projectData = await getProjectByIdOrName(
+                    props.task.value.projectId,
+                );
+                project.value = projectData.project;
+            }
+
+            init();
+
             if (props.task.value.tags) {
                 for (const tag of props.task.value.tags) {
                     tagsItems.value = [
@@ -224,34 +241,42 @@ export default function EditTaskDialog(props: DialogProps) {
                                     <Text>
                                         {dataTask.assigneesId.value.length === 0
                                             ? "Pick Assignee(s)"
-                                            : dataTask.assigneesId.value.join(
-                                                ", ",
+                                            : dataTask.assigneesId.value.map(
+                                                (id) =>
+                                                    project.value?.permissions.filter(
+                                                        (p) =>
+                                                            p.userId === id,
+                                                    )[0].user.username,
                                             )}
                                     </Text>
                                 }
                             >
-                                {["0"].map((userId: string) => (
-                                    <Button
-                                        className={cn(
-                                            "flex min-w-[200px] items-center justify-start gap-xs bg-unset text-left font-normal text-foreground hover:text-foreground",
-                                            isAssigneeSelected(userId)
-                                                ? "text-foreground"
-                                                : "text-muted",
-                                        )}
-                                        onClick={() => selectAssignee(userId)}
-                                    >
-                                        <IconCheck
-                                            size={14}
+                                {project.value?.permissions.map(
+                                    (p: Permission) => (
+                                        <Button
                                             className={cn(
-                                                "transition-all",
-                                                isAssigneeSelected(userId)
-                                                    ? "opacity-100"
-                                                    : "opacity-0",
+                                                "flex min-w-[200px] items-center justify-start gap-xs bg-unset text-left font-normal text-foreground hover:text-foreground",
+                                                isAssigneeSelected(p.userId)
+                                                    ? "text-foreground"
+                                                    : "text-muted",
                                             )}
-                                        />
-                                        <Text>{userId}</Text>
-                                    </Button>
-                                ))}
+                                            onClick={() =>
+                                                selectAssignee(p.userId)
+                                            }
+                                        >
+                                            <IconCheck
+                                                size={14}
+                                                className={cn(
+                                                    "transition-all",
+                                                    isAssigneeSelected(p.userId)
+                                                        ? "opacity-100"
+                                                        : "opacity-0",
+                                                )}
+                                            />
+                                            <Text>{p.user.username}</Text>
+                                        </Button>
+                                    ),
+                                )}
                             </MenuCheckbox>
                         </div>
 

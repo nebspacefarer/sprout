@@ -1,4 +1,5 @@
 import type { Signal } from "@preact/signals";
+import Avatar from "#ui/Avatar";
 import Card from "#ui/Card";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
@@ -23,7 +24,9 @@ export default function TasksListing({ tasks }: { tasks: Signal<Task[]> }) {
                         <Text className="font-semibold">{task.title}</Text>
                     </div>
                     <div className="flex items-center gap-sm">
-                        <Text>{task.assigneesId?.join(", ")}</Text>
+                        {task.assignees?.map((a) => (
+                            <Avatar src={a.avatar} fallback={a.username} />
+                        ))}
                         <Show when={task.dueAt !== undefined}>
                             <Text>Due: {task.dueAt}</Text>
                         </Show>

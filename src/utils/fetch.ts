@@ -33,7 +33,7 @@ async function callApi(path: string, options?: RequestInit) {
             }
         }
 
-        if (data.err.code === "FST_JWT_NO_AUTHORIZATION_IN_COOKIE") {
+        if (data.err?.code === "FST_JWT_NO_AUTHORIZATION_IN_COOKIE") {
             data = { err: "Not logged in." };
             localStorage.setItem("user", null);
             navigate("/", { replace: true });
@@ -119,7 +119,7 @@ export async function getProjects() {
     });
 }
 
-export async function getProjectByName(name: string) {
+export async function getProjectByIdOrName(name: string) {
     return await callApi(`${url}/projects/${name}`, {
         credentials: "include",
     });

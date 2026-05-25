@@ -4,6 +4,7 @@ import Card from "#ui/Card";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { projectStatuses } from "#utils/status";
+import { toFallback } from "#utils/strings";
 import type { ProjectData } from "#utils/types";
 
 export default function ProjectsListing({
@@ -40,11 +41,12 @@ export default function ProjectsListing({
                         </div>
 
                         <div className="flex items-center gap-sm">
-                            <Text>
-                                {project.permissions
-                                    ?.map((p) => p.userId)
-                                    .join(", ")}
-                            </Text>
+                            {project.permissions?.map((p) => (
+                                <Avatar
+                                    src={p.user.avatar}
+                                    fallback={toFallback(p.user.username)}
+                                />
+                            ))}
                         </div>
                     </Card>
                 );

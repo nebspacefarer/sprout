@@ -18,6 +18,7 @@ export default function Avatar(props: AvatarProps) {
 					"flex items-center justify-center overflow-hidden rounded-full bg-surface",
 					props.className,
 				)}
+				title={props.title}
 			>
 				<BaseAvatar.Image
 					src={props.src}

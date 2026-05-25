@@ -7,6 +7,7 @@ import {
     IconNote,
     IconTrashX,
 } from "@tabler/icons-preact";
+import Avatar from "#ui/Avatar";
 import Button from "#ui/Button";
 import Card from "#ui/Card";
 import { MenuSelect, MenuSelectItem } from "#ui/MenuSelect";
@@ -14,6 +15,7 @@ import Show from "#ui/Show";
 import Tag from "#ui/Tag";
 import Text from "#ui/Text";
 import { cn } from "#utils/cn";
+import { toFallback } from "#utils/strings";
 import type { ProjectData, Status, Task } from "#utils/types";
 
 export default function LayoutSection({
@@ -144,8 +146,13 @@ function SectionTask({
 
             <div className="flex items-center gap-sm">
                 <div className="flex items-center gap-xs px-sm">
-                    <Show when={task.assigneesId !== undefined}>
-                        <Text>{task.assigneesId?.join(", ")}</Text>
+                    <Show when={task.assignees !== undefined}>
+                        {task.assignees.map((a) => (
+                            <Avatar
+                                src={a.avatar}
+                                fallback={toFallback(a.username)}
+                            />
+                        ))}
                     </Show>
                 </div>
 

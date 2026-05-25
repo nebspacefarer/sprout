@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync, FastifyReply } from "fastify";
-import type { Task } from "../../src/utils/types";
+import type { PublicUser, Task } from "../../src/utils/types";
 import { authPreHandler } from "../plugins/authPreHandler";
 import type { RequestBody } from "../utils/requestTypes";
 
@@ -9,14 +9,28 @@ const tasks: FastifyPluginAsync = async (fastify): Promise<void> => {
         { preHandler: authPreHandler },
         async (request, reply: FastifyReply) => {
             let tasks: Task[] = fastify.db().tasks.query().find();
+            const users: PublicUser[] = fastify.db().users.query().find();
 
             for (const task of tasks) {
                 if (
                     task.userId !== request.auth?._id ||
                     !task.assigneesId?.includes(request.auth?._id as string)
                 ) {
-                    tasks = [...tasks.filter((t) => t._id === task._id)];
+                    return;
                 }
+
+                const taskUser = users.find((u) => u._id === task.userId);
+                task.user = taskUser;
+                task.assignees = [];
+
+                for (const assigneeId of task.assigneesId) {
+                    const assigneeUser = users.find(
+                        (u) => u._id === assigneeId,
+                    ) as PublicUser;
+                    task.assignees.push(assigneeUser);
+                }
+
+                tasks = [...tasks.filter((t) => t._id === task._id)];
             }
 
             return reply.code(200).send({

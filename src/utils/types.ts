@@ -10,7 +10,8 @@ export type Inbox = {
 };
 
 export type Permission = {
-	userId: string;
+	user?: PublicUser;
+	userId?: string;
 	level: number;
 };
 
@@ -48,7 +49,8 @@ export type Task = {
 	title: string;
 	content?: string;
 	projectId: string;
-	assigneesId?: string[];
+	assigneesId: string[];
+	assignees?: PublicUser[];
 	tags?: Tag[];
 	status: number;
 	priority: number;
@@ -56,7 +58,8 @@ export type Task = {
 	createdAt: string;
 	updatedAt: string;
 	dueAt?: string;
-	userId: string;
+	userId?: string;
+	user?: PublicUser;
 };
 export type TaskDocument = NeboaDocument<Task>;
 

@@ -7,7 +7,7 @@ import Button from "#ui/Button";
 import Card from "#ui/Card";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
-import { getProjectByName } from "#utils/fetch";
+import { getProjectByIdOrName } from "#utils/fetch";
 import type { Note, Project, Task } from "#utils/types";
 import NotesListing from "./NotesListing";
 import ProjectToolbar from "./ProjectTopbar";
@@ -21,7 +21,7 @@ export default function ProjectPage() {
 
     useEffect(() => {
         async function init() {
-            const data = await getProjectByName(params.name);
+            const data = await getProjectByIdOrName(params.name);
 
             project.value = data.project;
             tasks.value = data.tasks;
