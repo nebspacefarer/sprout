@@ -80,7 +80,11 @@ function ListTask({
     );
 
     return (
-        <Card className="justify-between bg-surface font-semibold" small>
+        <Card
+            className="justify-between border-l-4 bg-surface font-semibold"
+            style={{ borderLeftColor: taskStatuses[task.status].color }}
+            small
+        >
             <div className="flex items-center gap-xs">
                 <Button className="bg-unset text-muted hover:text-success">
                     <IconCheck />
