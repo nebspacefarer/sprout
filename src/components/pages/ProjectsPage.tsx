@@ -1,4 +1,4 @@
-import { IconCalendarTime, IconDots, IconPlant } from "@tabler/icons-preact";
+import { IconCalendarTime, IconPlant } from "@tabler/icons-preact";
 import { format } from "date-fns";
 import { useEffect } from "preact/hooks";
 import { useLocation } from "wouter";
@@ -14,6 +14,7 @@ import Button from "../ui/Button";
 import Card from "../ui/Card";
 import Tag from "../ui/Tag";
 import Text from "../ui/Text";
+import ProjectMenu from "./ProjectPage/ProjectMenu";
 
 export default function ProjectsPage() {
     const store = useStore();
@@ -74,9 +75,8 @@ function ProjectCard({ project }: { project: Project }) {
                     <Text className="font-semibold text-lg">
                         {project.title}
                     </Text>
-                    <Button>
-                        <IconDots size={18} />
-                    </Button>
+
+                    <ProjectMenu />
                 </div>
 
                 <Text className="text-muted italic" title={project.desc}>

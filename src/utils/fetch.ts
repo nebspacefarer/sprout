@@ -133,6 +133,14 @@ export async function postProject(project: Project) {
     });
 }
 
+export async function deleteProject(project: Project) {
+    return await callApi(`${url}/projects`, {
+        method: "DELETE",
+        credentials: "include",
+        body: JSON.stringify(project),
+    });
+}
+
 // TASKS
 
 export async function getTasks() {

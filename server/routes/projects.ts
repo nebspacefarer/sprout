@@ -178,6 +178,48 @@ const projects: FastifyPluginAsync = async (fastify): Promise<void> => {
 			});
 		},
 	);
+
+	fastify.delete<RequestBody>(
+		"/api/projects",
+		{ preHandler: authPreHandler },
+		async (request, reply: FastifyReply) => {
+			const project: Project = JSON.parse(request.body);
+
+			const users: PublicUser[] = fastify
+				.db()
+				.users.query()
+				.equalTo("_id", request.auth?._id)
+				.find();
+
+			if (!users) {
+				return reply
+					.code(404)
+					.send({ err: "User not found from token." });
+			}
+
+			if (project.permissions) {
+				for (const perm of project.permissions) {
+					if (perm.userId === users[0]._id) {
+						if (perm.level !== 3) {
+							return reply.code(401).send({
+								err: "Not authorized to delete this project.",
+							});
+						}
+
+						const data = fastify.db().projects.delete(project._id);
+
+						return reply.code(200).send({
+							project: data,
+						});
+					}
+				}
+			}
+
+			return reply.code(401).send({
+				err: "Not authorized to delete this project.",
+			});
+		},
+	);
 };
 
 export default projects;

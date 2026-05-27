@@ -17,7 +17,10 @@ export function MenuSelect(props: MenuSelectProps) {
                 <Show when={props.menuTitle !== undefined}>
                     <Text className="font-bold text-sm">{props.menuTitle}</Text>
                 </Show>
-                <Menu.Trigger className="flex h-10 select-none items-center justify-center gap-xs rounded-md border border-border bg-crust px-sm text-foreground hover:bg-border focus-visible:outline-2 focus-visible:outline-border focus-visible:-outline-offset-1 active:bg-border data-[popup-open]:bg-border">
+                <Menu.Trigger
+                    className="flex h-10 select-none items-center justify-center gap-xs rounded-md border border-border bg-crust px-sm text-foreground hover:bg-border focus-visible:outline-2 focus-visible:outline-border focus-visible:-outline-offset-1 active:bg-border data-[popup-open]:bg-border"
+                    onClick={(ev) => ev.stopPropagation()}
+                >
                     {props.menuPlaceholder} <IconChevronDown size={10} />
                 </Menu.Trigger>
             </div>
@@ -37,7 +40,7 @@ export function MenuSelect(props: MenuSelectProps) {
 }
 
 interface MenuSelectItemProps extends BaseHTMLAttributes<HTMLBaseElement> {
-    onClick: () => void;
+    onClick: (ev: MouseEvent) => void;
 }
 
 export function MenuSelectItem(props: MenuSelectItemProps) {
