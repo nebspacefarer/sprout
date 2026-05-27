@@ -8,6 +8,7 @@ import Dialog from "#ui/Dialog";
 import Text from "#ui/Text";
 import { updateTask } from "#utils/fetch";
 import { taskStatuses } from "#utils/status";
+import { useStore } from "#utils/store";
 import type { ProjectData, Task } from "#utils/types";
 
 interface TaskContextMenuProps extends BaseHTMLAttributes<HTMLBaseElement> {
@@ -20,6 +21,8 @@ interface TaskContextMenuProps extends BaseHTMLAttributes<HTMLBaseElement> {
 }
 
 export default function TaskContextMenu(props: TaskContextMenuProps) {
+    const store = useStore();
+
     const open = useSignal<boolean>(false);
     const dialogOpen = useSignal<boolean>(false);
 
@@ -32,7 +35,12 @@ export default function TaskContextMenu(props: TaskContextMenuProps) {
         const task: Task = props.task;
         task.status = newId;
 
-        await updateTask(task);
+        const data = await updateTask(task);
+
+        store.tasks = [
+            ...store.tasks.filter((t) => t._id !== data.task._id),
+            data.task,
+        ];
     }
 
     return (

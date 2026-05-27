@@ -1,13 +1,13 @@
 import type { Signal } from "@preact/signals";
 import {
-    IconCalendarExclamation,
-    IconCheck,
-    IconClockPlay,
-    IconDots,
-    IconEdit,
-    IconFlag,
-    IconNote,
-    IconTrashX,
+	IconCalendarExclamation,
+	IconCheck,
+	IconClockPlay,
+	IconDots,
+	IconEdit,
+	IconFlag,
+	IconNote,
+	IconTrashX,
 } from "@tabler/icons-preact";
 import { format, formatDistance } from "date-fns";
 import Avatar from "#ui/Avatar";
@@ -18,6 +18,7 @@ import Show from "#ui/Show";
 import Tag from "#ui/Tag";
 import Text from "#ui/Text";
 import { cn } from "#utils/cn";
+import { updateTask } from "#utils/fetch";
 import { taskStatuses } from "#utils/status";
 import { useStore } from "#utils/store";
 import { toFallback } from "#utils/strings";
@@ -25,178 +26,204 @@ import type { ProjectData, Task } from "#utils/types";
 import TaskContextMenu from "./TaskContextMenu";
 
 export default function LayoutList({
-    projectsSelected,
-    layout,
-    deleteTask,
-    taskDialogOpen,
-    editedTask,
+	projectsSelected,
+	layout,
+	deleteTask,
+	taskDialogOpen,
+	editedTask,
 }: {
-    projectsSelected: Signal<ProjectData[]>;
-    layout: Signal<string[]>;
-    deleteTask: (task: Task) => void;
-    taskDialogOpen: Signal<boolean>;
-    editedTask: Signal<Task>;
+	projectsSelected: Signal<ProjectData[]>;
+	layout: Signal<string[]>;
+	deleteTask: (task: Task) => void;
+	taskDialogOpen: Signal<boolean>;
+	editedTask: Signal<Task>;
 }) {
-    const store = useStore();
+	const store = useStore();
 
-    return (
-        <div>
-            {store.tasks.map((task: Task) => {
-                switch (layout.value) {
-                    default:
-                        return (
-                            <TaskContextMenu
-                                trigger={
-                                    <ListTask
-                                        projectsSelected={projectsSelected}
-                                        task={task}
-                                        deleteTask={() => deleteTask(task)}
-                                        taskDialogOpen={taskDialogOpen}
-                                        editedTask={editedTask}
-                                    />
-                                }
-                                deleteTask={() => deleteTask(task)}
-                                task={task}
-                                editedTask={editedTask}
-                                projectsSelected={projectsSelected}
-                                taskDialogOpen={taskDialogOpen}
-                            />
-                        );
-                }
-            })}
-        </div>
-    );
+	return (
+		<div>
+			{store.tasks.map((task: Task) => {
+				switch (layout.value) {
+					default:
+						return (
+							<TaskContextMenu
+								trigger={
+									<ListTask
+										projectsSelected={projectsSelected}
+										task={task}
+										deleteTask={() => deleteTask(task)}
+										taskDialogOpen={taskDialogOpen}
+										editedTask={editedTask}
+									/>
+								}
+								deleteTask={() => deleteTask(task)}
+								task={task}
+								editedTask={editedTask}
+								projectsSelected={projectsSelected}
+								taskDialogOpen={taskDialogOpen}
+							/>
+						);
+				}
+			})}
+		</div>
+	);
 }
 
 function ListTask({
-    projectsSelected,
-    task,
-    deleteTask,
-    taskDialogOpen,
-    editedTask,
+	projectsSelected,
+	task,
+	deleteTask,
+	taskDialogOpen,
+	editedTask,
 }: {
-    projectsSelected: Signal<ProjectData[]>;
-    task: Task;
-    deleteTask: (_id: string) => void;
-    taskDialogOpen: Signal<boolean>;
-    editedTask: Signal<Task>;
+	projectsSelected: Signal<ProjectData[]>;
+	task: Task;
+	deleteTask: (_id: string) => void;
+	taskDialogOpen: Signal<boolean>;
+	editedTask: Signal<Task>;
 }) {
-    function editTask() {
-        editedTask.value = task;
-        taskDialogOpen.value = true;
-    }
+	const store = useStore();
 
-    const projectData = projectsSelected.value.find(
-        (p) => p.project._id === task.projectId,
-    );
+	function editTask() {
+		editedTask.value = task;
+		taskDialogOpen.value = true;
+	}
 
-    return (
-        <Card
-            className="w-full justify-between border-l-4 bg-surface font-semibold"
-            style={{ borderLeftColor: taskStatuses[task.status].color }}
-            small
-        >
-            <div className="flex items-center gap-xs">
-                <Button className="bg-unset text-muted hover:text-success">
-                    <IconCheck />
-                </Button>
+	async function changeStatus(newId: number, task: Task) {
+		task.status = newId;
 
-                <Button
-                    className="group flex flex-1 items-center gap-sm bg-unset text-unset"
-                    onClick={() => editTask()}
-                >
-                    <Text
-                        className="text-sm uppercase"
-                        style={{ color: taskStatuses[task.status].color }}
-                    >
-                        {taskStatuses[task.status].title}
-                    </Text>
+		const data = await updateTask(task);
 
-                    <Show when={projectsSelected.value.length > 1}>
-                        <Text className="text-muted">
-                            {projectData.project.title}
-                        </Text>
-                    </Show>
+		store.tasks = [
+			...store.tasks.filter((t) => t._id !== data.task._id),
+			data.task,
+		];
+	}
 
-                    <Text className="border-surface border-b transition-all group-hover:border-primary">
-                        {task.title}
-                    </Text>
+	const projectData = projectsSelected.value.find(
+		(p) => p.project._id === task.projectId,
+	);
 
-                    <Show when={task.content !== undefined}>
-                        <IconNote className="text-muted" title="Read more..." />
-                    </Show>
+	return (
+		<Card
+			className="w-full justify-between border-l-4 bg-surface font-semibold"
+			style={{
+				borderLeftColor: taskStatuses[task.status].color,
+				paddingTop: 2,
+				paddingBottom: 2,
+			}}
+			small
+		>
+			<div className="flex items-center gap-xs">
+				<Show when={task.status !== 5}>
+					<Button
+						className="bg-unset text-muted hover:text-success"
+						onClick={() => changeStatus(5, task)}
+					>
+						<IconCheck />
+					</Button>
+				</Show>
 
-                    <Show when={task.dueAt !== undefined}>
-                        {task.dueAt !== undefined && (
-                            <div
-                                className="flex items-center gap-1 px-xs text-sm"
-                                title={
-                                    "Due: " +
-                                    format(task.dueAt, "MM/dd/yyyy HH:mm")
-                                }
-                            >
-                                <IconCalendarExclamation />
-                                <Text>
-                                    {formatDistance(new Date(), task.dueAt)}
-                                </Text>
-                            </div>
-                        )}
-                    </Show>
+				<Show when={task.status === 5}>
+					<IconCheck className="mx-xs text-success" />
+				</Show>
 
-                    <IconFlag
-                        size={16}
-                        className={cn(
-                            task.priority === 0 && "text-muted",
-                            task.priority === 1 && "text-success",
-                            task.priority === 2 && "text-warning",
-                            task.priority === 3 && "text-danger",
-                        )}
-                        title={`Priority ${task.priority}`}
-                    />
+				<Button
+					className="group flex flex-1 items-center gap-sm bg-unset text-unset"
+					onClick={() => editTask()}
+				>
+					<Text
+						className="text-sm uppercase"
+						style={{ color: taskStatuses[task.status].color }}
+					>
+						{taskStatuses[task.status].title}
+					</Text>
 
-                    <div className="flex items-center gap-xs">
-                        {task.tags?.map((tag) => (
-                            <Tag className="border border-border bg-crust">
-                                #{tag.name}
-                            </Tag>
-                        ))}
-                    </div>
-                </Button>
-            </div>
+					<Show when={projectsSelected.value.length > 1}>
+						<Text className="text-muted">
+							{projectData.project.title}
+						</Text>
+					</Show>
 
-            <div className="flex items-center gap-sm">
-                <div className="flex items-center gap-xs px-sm">
-                    <Show when={task.assignees !== undefined}>
-                        {task.assignees.map((a) => (
-                            <Avatar
-                                src={a.avatar}
-                                fallback={toFallback(a.username)}
-                            />
-                        ))}
-                    </Show>
-                </div>
+					<Text className="border-surface border-b transition-all group-hover:border-primary">
+						{task.title}
+					</Text>
 
-                <Button className="flex items-center gap-xs border-border bg-crust py-1 transition-all hover:scale-[110%] hover:border-muted">
-                    <IconClockPlay className="text-success" />{" "}
-                    <Text className="text-muted">00:00:00</Text>
-                </Button>
+					<Show when={task.content !== undefined}>
+						<IconNote className="text-muted" title="Read more..." />
+					</Show>
 
-                <MenuSelect menuPlaceholder={<IconDots />}>
-                    <MenuSelectItem
-                        onClick={() => editTask()}
-                        className="flex items-center gap-xs"
-                    >
-                        <IconEdit /> <Text>Edit</Text>
-                    </MenuSelectItem>
+					<Show when={task.dueAt !== undefined}>
+						{task.dueAt !== undefined && (
+							<div
+								className="flex items-center gap-1 px-xs text-sm"
+								title={
+									"Due: " +
+									format(task.dueAt, "MM/dd/yyyy HH:mm")
+								}
+							>
+								<IconCalendarExclamation />
+								<Text>
+									{formatDistance(new Date(), task.dueAt)}
+								</Text>
+							</div>
+						)}
+					</Show>
 
-                    <MenuSelectItem
-                        onClick={() => deleteTask(task._id)}
-                        className="flex items-center gap-xs"
-                    >
-                        <IconTrashX /> <Text>Remove</Text>
-                    </MenuSelectItem>
-                </MenuSelect>
-            </div>
-        </Card>
-    );
+					<IconFlag
+						size={16}
+						className={cn(
+							task.priority === 0 && "text-muted",
+							task.priority === 1 && "text-success",
+							task.priority === 2 && "text-warning",
+							task.priority === 3 && "text-danger",
+						)}
+						title={`Priority ${task.priority}`}
+					/>
+
+					<div className="flex items-center gap-xs">
+						{task.tags?.map((tag) => (
+							<Tag className="border border-border bg-crust">
+								#{tag.name}
+							</Tag>
+						))}
+					</div>
+				</Button>
+			</div>
+
+			<div className="flex items-center gap-sm">
+				<div className="flex items-center gap-xs px-sm">
+					<Show when={task.assignees !== undefined}>
+						{task.assignees.map((a) => (
+							<Avatar
+								src={a.avatar}
+								fallback={toFallback(a.username)}
+							/>
+						))}
+					</Show>
+				</div>
+
+				<Button className="flex items-center gap-xs border-border bg-crust py-1 transition-all hover:scale-[110%] hover:border-muted">
+					<IconClockPlay className="text-success" />{" "}
+					<Text className="text-muted">00:00:00</Text>
+				</Button>
+
+				<MenuSelect menuPlaceholder={<IconDots />}>
+					<MenuSelectItem
+						onClick={() => editTask()}
+						className="flex items-center gap-xs"
+					>
+						<IconEdit /> <Text>Edit</Text>
+					</MenuSelectItem>
+
+					<MenuSelectItem
+						onClick={() => deleteTask(task._id)}
+						className="flex items-center gap-xs"
+					>
+						<IconTrashX /> <Text>Remove</Text>
+					</MenuSelectItem>
+				</MenuSelect>
+			</div>
+		</Card>
+	);
 }

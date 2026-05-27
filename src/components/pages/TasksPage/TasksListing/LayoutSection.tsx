@@ -22,6 +22,7 @@ import { useStore } from "#utils/store";
 import { toFallback } from "#utils/strings";
 import type { ProjectData, Status, Task } from "#utils/types";
 import TaskContextMenu from "./TaskContextMenu";
+import { updateTask } from "#utils/fetch";
 
 export default function LayoutSection({
     projectsSelected,
@@ -96,9 +97,22 @@ function SectionTask({
     taskDialogOpen: Signal<boolean>;
     editedTask: Signal<Task>;
 }) {
+    const store = useStore();
+
     function editTask() {
         editedTask.value = task;
         taskDialogOpen.value = true;
+    }
+
+    async function changeStatus(newId: number, task: Task) {
+        task.status = newId;
+
+        const data = await updateTask(task);
+
+        store.tasks = [
+            ...store.tasks.filter((t) => t._id !== data.task._id),
+            data.task,
+        ];
     }
 
     const projectData = projectsSelected.value.find(
@@ -108,9 +122,18 @@ function SectionTask({
     return (
         <Card className="w-full justify-between bg-surface font-semibold" small>
             <div className="flex w-full gap-xs">
-                <Button className="bg-unset text-muted hover:text-success">
-                    <IconCheck />
-                </Button>
+                <Show when={task.status !== 5}>
+                    <Button
+                        className="bg-unset text-muted hover:text-success"
+                        onClick={() => changeStatus(5, task)}
+                    >
+                        <IconCheck />
+                    </Button>
+                </Show>
+
+                <Show when={task.status === 5}>
+                    <IconCheck className="mx-xs text-success" />
+                </Show>
 
                 <Button
                     className="group flex flex-1 flex-col items-start gap-1 bg-unset text-unset"
