@@ -15,7 +15,7 @@ export default function Button(props: ButtonProps) {
 	return (
 		<BaseButton
 			className={cn(
-				"flex cursor-pointer select-none items-center justify-center rounded-md bg-primary px-xs font-semibold text-primary-foreground outline-0",
+				"flex cursor-pointer select-none items-center justify-center rounded-md px-xs font-semibold outline-0",
 				props.className,
 			)}
 			onClick={props.onClick}
