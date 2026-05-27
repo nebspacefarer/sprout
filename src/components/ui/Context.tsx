@@ -53,6 +53,7 @@ export default function Context(props: ContextProps) {
             <Button
                 ref={triggerNode}
                 className="w-full border-unset bg-unset text-unset"
+                style={{ paddingLeft: 0, paddingRight: 0 }}
             >
                 {props.trigger}
             </Button>
