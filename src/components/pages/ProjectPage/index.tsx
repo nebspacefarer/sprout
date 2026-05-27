@@ -1,5 +1,4 @@
 import { Separator } from "@base-ui/react";
-import { useSignal } from "@preact/signals";
 import { IconListDetails, IconNote } from "@tabler/icons-preact";
 import { useEffect } from "preact/hooks";
 import { useParams } from "wouter";
@@ -8,24 +7,22 @@ import Card from "#ui/Card";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { getProjectByIdOrName } from "#utils/fetch";
-import type { Note, Project, Task } from "#utils/types";
+import { useStore } from "#utils/store";
 import NotesListing from "./NotesListing";
 import ProjectToolbar from "./ProjectTopbar";
 import TasksListing from "./TasksListing";
 
 export default function ProjectPage() {
+    const store = useStore();
     const params = useParams<{ name: string }>();
-    const project = useSignal<Project>(null);
-    const tasks = useSignal<Task[]>([]);
-    const notes = useSignal<Note[]>([]);
 
     useEffect(() => {
         async function init() {
             const data = await getProjectByIdOrName(params.name);
 
-            project.value = data.project;
-            tasks.value = data.tasks;
-            notes.value = data.notes;
+            store.project = data.project;
+            store.tasks = data.tasks;
+            store.notes = data.notes;
         }
 
         init();
@@ -33,9 +30,9 @@ export default function ProjectPage() {
 
     return (
         <div>
-            <Show when={project.value !== null}>
+            <Show when={store.project !== null}>
                 <div className="flex flex-col gap-xs">
-                    <ProjectToolbar project={project} />
+                    <ProjectToolbar />
 
                     <div className="flex gap-sm">
                         <Card className="flex-1" orientation="col">
@@ -52,7 +49,7 @@ export default function ProjectPage() {
                                 className="h-px w-full bg-border"
                             />
 
-                            <TasksListing tasks={tasks} project={project} />
+                            <TasksListing />
                         </Card>
 
                         <Card className="flex-1" orientation="col">
@@ -68,7 +65,7 @@ export default function ProjectPage() {
                                 className="h-px w-full bg-border"
                             />
 
-                            <NotesListing project={project} notes={notes} />
+                            <NotesListing />
                         </Card>
                     </div>
                 </div>

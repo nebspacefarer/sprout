@@ -1,4 +1,3 @@
-import type { Signal } from "@preact/signals";
 import { IconCalendarExclamation } from "@tabler/icons-preact";
 import { format, formatDistance } from "date-fns";
 import Avatar from "#ui/Avatar";
@@ -6,18 +5,15 @@ import Card from "#ui/Card";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { taskStatuses } from "#utils/status";
-import type { Project, Task } from "#utils/types";
+import { useStore } from "#utils/store";
+import type { Task } from "#utils/types";
 
-export default function TasksListing({
-    tasks,
-    project,
-}: {
-    tasks: Signal<Task[]>;
-    project: Signal<Project>;
-}) {
+export default function TasksListing() {
+    const store = useStore();
+
     return (
         <div className="flex w-full flex-col gap-xs">
-            {tasks.value?.map((task: Task) => (
+            {store.tasks.map((task: Task) => (
                 <Card
                     className="flex items-center justify-between bg-surface"
                     small
@@ -60,9 +56,9 @@ export default function TasksListing({
                 </Card>
             ))}
 
-            <Show when={tasks.value.length === 0}>
+            <Show when={store.tasks.length === 0}>
                 <Text className="text-muted">
-                    No task found for {project.value?.title}.
+                    No task found for {store.project.title}.
                 </Text>
             </Show>
         </div>

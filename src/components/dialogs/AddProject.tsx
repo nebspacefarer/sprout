@@ -5,6 +5,7 @@ import { useLocation } from "wouter";
 import { cn } from "#utils/cn";
 import { postProject } from "#utils/fetch";
 import { projectStatuses } from "#utils/status";
+import { useStore } from "#utils/store";
 import type { Project, Tag } from "#utils/types";
 import Avatar from "../ui/Avatar";
 import Button from "../ui/Button";
@@ -21,7 +22,9 @@ interface DialogProps extends BaseHTMLAttributes<HTMLBaseElement> {
 }
 
 export default function AddProjectDialog(props: DialogProps) {
-	const [location, navigate] = useLocation();
+	const [_location, _navigate] = useLocation();
+	const store = useStore();
+
 	const error = useSignal<string>("");
 
 	const icon = useSignal<string>("");
@@ -86,9 +89,7 @@ export default function AddProjectDialog(props: DialogProps) {
 		const data = await postProject(project);
 
 		if (data) {
-			if (location === "/projects" || location === "/") {
-				navigate(location, { state: { refresh: true } });
-			}
+			store.projects = [...store.projects, data.project];
 			props.open.value = false;
 		}
 	}

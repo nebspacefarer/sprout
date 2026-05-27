@@ -1,21 +1,20 @@
-import type { Signal } from "@preact/signals";
 import Avatar from "#ui/Avatar";
 import Card from "#ui/Card";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { projectStatuses } from "#utils/status";
+import { useStore } from "#utils/store";
 import { toFallback } from "#utils/strings";
 import type { ProjectData } from "#utils/types";
 
-export default function ProjectsListing({
-    projects,
-}: {
-    projects: Signal<ProjectData[]>;
-}) {
+export default function ProjectsListing() {
+    const store = useStore();
+
     return (
         <div className="flex w-full flex-col gap-xs">
-            {projects.value.map((projectData: ProjectData) => {
+            {store.projects.map((projectData: ProjectData) => {
                 const project = projectData.project;
+
                 return (
                     <Card
                         className="flex items-center justify-between bg-surface"
@@ -52,7 +51,7 @@ export default function ProjectsListing({
                 );
             })}
 
-            <Show when={projects.value.length === 0}>
+            <Show when={store.projects.length === 0}>
                 <Text className="text-muted">No project found.</Text>
             </Show>
         </div>

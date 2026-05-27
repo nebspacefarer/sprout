@@ -17,17 +17,16 @@ import Toggle from "#ui/Toggle";
 import ToggleGroup from "#ui/ToggleGroup";
 import Toolbar from "#ui/Toolbar";
 import { cn } from "#utils/cn";
+import { useStore } from "#utils/store";
 import type { ProjectData } from "#utils/types";
 
 export default function TasksToolbar({
-	projects,
 	projectsSelected,
 	search,
 	checkedFields,
 	sort,
 	layout,
 }: {
-	projects: Signal<ProjectData[]>;
 	projectsSelected: Signal<ProjectData[]>;
 	search: Signal<string>;
 	checkedFields: DeepSignalType<{
@@ -40,6 +39,8 @@ export default function TasksToolbar({
 	sort: Signal<string>;
 	layout: Signal<string[]>;
 }) {
+	const store = useStore();
+
 	function isProjectSelected(project: ProjectData) {
 		return (
 			projectsSelected.value.find(
@@ -65,7 +66,7 @@ export default function TasksToolbar({
 	return (
 		<Toolbar>
 			<MenuCheckbox menuTitle="Projects selected">
-				{projects.value.map((project: ProjectData) => (
+				{store.projects.map((project: ProjectData) => (
 					<Button
 						className={cn(
 							"flex min-w-[200px] items-center justify-start gap-xs bg-unset text-left font-normal text-foreground hover:text-foreground",

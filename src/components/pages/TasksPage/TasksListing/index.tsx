@@ -1,6 +1,7 @@
-import { type Signal, useSignal } from "@preact/signals";
+import type { Signal } from "@preact/signals";
 import { useEffect } from "preact/hooks";
 import { taskStatuses } from "#utils/status";
+import { useStore } from "#utils/store";
 import type { ProjectData, Task } from "#utils/types";
 import LayoutList from "./LayoutList";
 import LayoutSection from "./LayoutSection";
@@ -18,14 +19,13 @@ export default function TasksListing({
     taskDialogOpen: Signal<boolean>;
     editedTask: Signal<Task>;
 }) {
-    const tasks = useSignal<Task[]>([]);
+    const store = useStore();
 
     useEffect(() => {
         function getTasks() {
-            tasks.value = [];
-
+            store.tasks = [];
             for (const projectData of projectsSelected.value) {
-                tasks.value = [...tasks.value, ...projectData.tasks];
+                store.tasks = [...store.tasks, ...projectData.tasks];
             }
         }
         getTasks();
@@ -40,7 +40,6 @@ export default function TasksListing({
                             <LayoutSection
                                 projectsSelected={projectsSelected}
                                 status={s}
-                                tasks={tasks}
                                 layout={layout}
                                 deleteTask={deleteTask}
                                 editedTask={editedTask}
@@ -52,7 +51,6 @@ export default function TasksListing({
             {layout.value.includes("list") && (
                 <LayoutList
                     projectsSelected={projectsSelected}
-                    tasks={tasks}
                     layout={layout}
                     deleteTask={deleteTask}
                     editedTask={editedTask}

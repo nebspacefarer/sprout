@@ -1,29 +1,26 @@
 import { Separator } from "@base-ui/react";
-import type { Signal } from "@preact/signals";
 import { IconAdjustmentsCog } from "@tabler/icons-preact";
 import Avatar from "#ui/Avatar";
 import Button from "#ui/Button";
 import Text from "#ui/Text";
-import type { Project } from "#utils/types";
+import { useStore } from "#utils/store";
 
-export default function ProjectToolbar({
-    project,
-}: {
-    project: Signal<Project>;
-}) {
+export default function ProjectToolbar() {
+    const store = useStore();
+
     return (
         <div className="flex flex-col gap-sm">
             <div className="flex items-center justify-between gap-sm">
                 <div className="flex items-center gap-xs">
                     <Avatar
-                        src={project.value?.icon}
-                        fallback={project.value?.title}
+                        src={store.project.icon}
+                        fallback={store.project.title}
                         className="size-16"
                     />
                     <Text className="border-primary border-b-3 font-semibold text-2xl">
-                        {project.value?.title}
+                        {store.project.title}
                     </Text>
-                    <Text>{project.value?.desc}</Text>
+                    <Text>{store.project.desc}</Text>
                 </div>
 
                 <Button className="size-10">

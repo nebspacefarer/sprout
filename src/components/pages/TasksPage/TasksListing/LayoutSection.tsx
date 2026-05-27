@@ -18,6 +18,7 @@ import Show from "#ui/Show";
 import Tag from "#ui/Tag";
 import Text from "#ui/Text";
 import { cn } from "#utils/cn";
+import { useStore } from "#utils/store";
 import { toFallback } from "#utils/strings";
 import type { ProjectData, Status, Task } from "#utils/types";
 import TaskContextMenu from "./TaskContextMenu";
@@ -26,7 +27,6 @@ export default function LayoutSection({
     projectsSelected,
     status,
     layout,
-    tasks,
     deleteTask,
     taskDialogOpen,
     editedTask,
@@ -34,11 +34,12 @@ export default function LayoutSection({
     projectsSelected: Signal<ProjectData[]>;
     status: Status;
     layout: Signal<string[]>;
-    tasks: Signal<Task[]>;
     deleteTask: (task: Task) => void;
     taskDialogOpen: Signal<boolean>;
     editedTask: Signal<Task>;
 }) {
+    const store = useStore();
+
     return (
         <div>
             <div
@@ -48,8 +49,8 @@ export default function LayoutSection({
                 <Text className="font-semibold text-lg">{status.title}</Text>
             </div>
             <div>
-                {tasks.value
-                    ?.filter((t) => t.status === status.id)
+                {store.tasks
+                    .filter((t) => t.status === status.id)
                     .map((task: Task) => {
                         switch (layout.value) {
                             default:
@@ -118,7 +119,7 @@ function SectionTask({
                     <div className="flex items-center gap-xs">
                         <Show when={projectsSelected.value.length > 1}>
                             <Text className="text-muted">
-                                {projectData.project.title}
+                                {projectData?.project.title}
                             </Text>
                         </Show>
 

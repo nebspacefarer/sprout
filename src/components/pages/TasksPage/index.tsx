@@ -6,6 +6,7 @@ import { useEffect } from "preact/hooks";
 import Page from "src/components/Page";
 import { useSearch } from "wouter";
 import { deleteTask, getProjects, postTask } from "#utils/fetch";
+import { useStore } from "#utils/store";
 import type { ProjectData, Task } from "#utils/types";
 import EditTaskDialog from "../../dialogs/EditTask";
 import TasksListing from "./TasksListing";
@@ -13,9 +14,10 @@ import TasksQuickAddBar from "./TasksQuickAddBar";
 import TasksToolbar from "./TasksToolbar";
 
 export default function TasksPage() {
+    const store = useStore();
     const toastManager = Toast.useToastManager();
+
     const _searchUrl = useSearch();
-    const projects = useSignal<ProjectData[]>([]);
 
     const projectsSelected = useSignal<ProjectData[]>([]);
     const search = useSignal<string>("");
@@ -38,7 +40,7 @@ export default function TasksPage() {
         async function init() {
             const data = await getProjects();
 
-            projects.value = data.projects;
+            store.projects = data.projects;
             projectsSelected.value = [...data.projects];
         }
 
@@ -76,7 +78,7 @@ export default function TasksPage() {
 
         const data = await postTask(task);
 
-        const project = projects.value.find(
+        const project = store.projects.find(
             (p) => p.project._id === data.task.projectId,
         );
 
@@ -88,8 +90,6 @@ export default function TasksPage() {
             ),
             project,
         ];
-
-        console.log(projectsSelected.value);
 
         toastManager.add({
             description: "Task created successfully!",
@@ -125,7 +125,6 @@ export default function TasksPage() {
         <Page auth pageIcon={<IconListDetails />} pageTitle="Tasks">
             <TasksToolbar
                 projectsSelected={projectsSelected}
-                projects={projects}
                 search={search}
                 checkedFields={checkedFields}
                 sort={sort}
@@ -134,7 +133,6 @@ export default function TasksPage() {
 
             <div className="flex flex-col gap-xs">
                 <TasksQuickAddBar
-                    projects={projects}
                     addTaskProjectField={addTaskProjectField}
                     addTaskField={addTaskField}
                     createQuickTask={createQuickTask}

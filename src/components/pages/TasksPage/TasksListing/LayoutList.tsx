@@ -19,6 +19,7 @@ import Tag from "#ui/Tag";
 import Text from "#ui/Text";
 import { cn } from "#utils/cn";
 import { taskStatuses } from "#utils/status";
+import { useStore } from "#utils/store";
 import { toFallback } from "#utils/strings";
 import type { ProjectData, Task } from "#utils/types";
 import TaskContextMenu from "./TaskContextMenu";
@@ -26,21 +27,21 @@ import TaskContextMenu from "./TaskContextMenu";
 export default function LayoutList({
     projectsSelected,
     layout,
-    tasks,
     deleteTask,
     taskDialogOpen,
     editedTask,
 }: {
     projectsSelected: Signal<ProjectData[]>;
     layout: Signal<string[]>;
-    tasks: Signal<Task[]>;
     deleteTask: (task: Task) => void;
     taskDialogOpen: Signal<boolean>;
     editedTask: Signal<Task>;
 }) {
+    const store = useStore();
+
     return (
         <div>
-            {tasks.value.map((task: Task) => {
+            {store.tasks.map((task: Task) => {
                 switch (layout.value) {
                     default:
                         return (

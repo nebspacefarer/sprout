@@ -17,24 +17,25 @@ import Link from "#ui/Link";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { getProjects, getTasks } from "#utils/fetch";
-import type { ProjectData, PublicUser, Task } from "#utils/types";
+import { useStore } from "#utils/store";
+import type { PublicUser } from "#utils/types";
 import ProjectsListing from "./ProjectsListing";
 import TasksListing from "./TasksListing";
 
 export default function DashboardPage() {
+    const store = useStore();
+
     const user = useSignal<PublicUser | null>(
         JSON.parse(localStorage.getItem("user")),
     );
-    const projects = useSignal<ProjectData[]>([]);
-    const tasks = useSignal<Task[]>([]);
 
     useEffect(() => {
         async function init() {
             const dataTasks = await getTasks();
             const dataProjects = await getProjects();
 
-            tasks.value = dataTasks.tasks;
-            projects.value = dataProjects.projects;
+            store.tasks = dataTasks.tasks;
+            store.projects = dataProjects.projects;
         }
 
         init();
@@ -81,7 +82,7 @@ export default function DashboardPage() {
                         className="h-px w-full bg-border"
                     />
 
-                    <TasksListing tasks={tasks} />
+                    <TasksListing />
                 </Card>
 
                 <Card className="flex-1" orientation="col">
@@ -101,7 +102,7 @@ export default function DashboardPage() {
                         className="h-px w-full bg-border"
                     />
 
-                    <ProjectsListing projects={projects} />
+                    <ProjectsListing />
                 </Card>
             </div>
 

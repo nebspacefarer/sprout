@@ -1,15 +1,17 @@
-import type { Signal } from "@preact/signals";
 import Avatar from "#ui/Avatar";
 import Card from "#ui/Card";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { taskStatuses } from "#utils/status";
+import { useStore } from "#utils/store";
 import type { Task } from "#utils/types";
 
-export default function TasksListing({ tasks }: { tasks: Signal<Task[]> }) {
+export default function TasksListing() {
+    const store = useStore();
+
     return (
         <div className="flex w-full flex-col gap-xs">
-            {tasks.value.map((task: Task) => (
+            {store.tasks.map((task: Task) => (
                 <Card
                     className="flex items-center justify-between bg-surface"
                     small
@@ -34,7 +36,7 @@ export default function TasksListing({ tasks }: { tasks: Signal<Task[]> }) {
                 </Card>
             ))}
 
-            <Show when={tasks.value.length === 0}>
+            <Show when={store.tasks.length === 0}>
                 <Text className="text-muted">No task found.</Text>
             </Show>
         </div>

@@ -8,18 +8,19 @@ import Card from "#ui/Card";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { deleteInbox, getInbox, postInbox } from "#utils/fetch";
+import { useStore } from "#utils/store";
 import type { Inbox } from "#utils/types";
 import EntryQuickAddBar from "./EntryQuickAddBar";
 
 export default function InboxPage() {
-    const entries = useSignal<Inbox[]>([]);
+    const store = useStore();
     const toastManager = Toast.useToastManager();
     const entry = useSignal<string>("");
 
     useEffect(() => {
         async function init() {
             const data = await getInbox();
-            entries.value = data.entries;
+            store.inbox = data.entries;
         }
 
         init();
@@ -45,7 +46,7 @@ export default function InboxPage() {
             description: "Inbox entry created successfully!",
         });
 
-        entries.value = [...entries.value, data.entry];
+        store.inbox = [...store.inbox, data.entry];
     }
 
     async function runDeleteEntry(entry: Inbox) {
@@ -63,9 +64,7 @@ export default function InboxPage() {
             description: "Inbox entry deleted sucessfully.",
         });
 
-        entries.value = [
-            ...entries.value.filter((e) => e._id === data.entry._id),
-        ];
+        store.inbox = [...store.inbox.filter((e) => e._id === data.entry._id)];
     }
 
     return (
@@ -73,7 +72,7 @@ export default function InboxPage() {
             <EntryQuickAddBar entry={entry} addEntry={() => runPostInbox()} />
 
             <Card>
-                {entries.value.map((entry) => (
+                {store.inbox.map((entry) => (
                     <Card
                         className="flex w-full items-center justify-between bg-surface"
                         small
@@ -85,7 +84,7 @@ export default function InboxPage() {
                     </Card>
                 ))}
 
-                <Show when={entries.value.length === 0}>
+                <Show when={store.inbox.length === 0}>
                     <Text className="text-muted">No Inbox entry.</Text>
                 </Show>
             </Card>

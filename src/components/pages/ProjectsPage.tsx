@@ -1,4 +1,3 @@
-import { useSignal } from "@preact/signals";
 import { IconCalendarTime, IconDots, IconPlant } from "@tabler/icons-preact";
 import { format } from "date-fns";
 import { useEffect } from "preact/hooks";
@@ -6,6 +5,7 @@ import { useLocation } from "wouter";
 import Show from "#ui/Show";
 import { getProjects } from "#utils/fetch";
 import { projectStatuses } from "#utils/status";
+import { useStore } from "#utils/store";
 import { textToParam } from "#utils/strings";
 import type { Project, ProjectData, Status } from "#utils/types";
 import Page from "../Page";
@@ -16,9 +16,8 @@ import Tag from "../ui/Tag";
 import Text from "../ui/Text";
 
 export default function ProjectsPage() {
+    const store = useStore();
     const [_location, navigate] = useLocation();
-
-    const projects = useSignal<ProjectData[]>([]);
 
     useEffect(() => {
         async function init() {
@@ -28,7 +27,7 @@ export default function ProjectsPage() {
                 return console.error(data?.err);
             }
 
-            projects.value = [...data.projects];
+            store.projects = [...data.projects];
         }
 
         init();
@@ -37,7 +36,7 @@ export default function ProjectsPage() {
     return (
         <Page auth pageIcon={<IconPlant />} pageTitle="Projects">
             <div className="flex flex-wrap gap-sm">
-                {projects.value.map((project: ProjectData) => (
+                {store.projects.map((project: ProjectData) => (
                     <Button
                         className="bg-unset text-left text-foreground"
                         onClick={() =>
@@ -50,7 +49,7 @@ export default function ProjectsPage() {
                     </Button>
                 ))}
 
-                <Show when={projects.value.length === 0}>
+                <Show when={store.projects.length === 0}>
                     <Text className="text-muted">No project... yet?</Text>
                 </Show>
             </div>
@@ -59,7 +58,9 @@ export default function ProjectsPage() {
 }
 
 function ProjectCard({ project }: { project: Project }) {
-    const status: Status = projectStatuses.find((p) => p.id === project.status);
+    const status: Status = projectStatuses.find(
+        (p) => p.id === project?.status,
+    );
 
     return (
         <Card>

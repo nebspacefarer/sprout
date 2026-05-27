@@ -4,24 +4,25 @@ import Button from "#ui/Button";
 import Field from "#ui/Field";
 import { MenuSelect, MenuSelectItem } from "#ui/MenuSelect";
 import Text from "#ui/Text";
+import { useStore } from "#utils/store";
 import type { ProjectData } from "#utils/types";
 
 export default function TasksQuickAddBar({
-    projects,
     addTaskField,
     addTaskProjectField,
     createQuickTask,
 }: {
-    projects: Signal<ProjectData[]>;
     addTaskField: Signal<string>;
     addTaskProjectField: Signal<string>;
     createQuickTask: () => void;
 }) {
+    const store = useStore();
+
     return (
         <div className="flex flex-col gap-xs">
             <div className="flex items-center gap-xs py-sm">
                 <MenuSelect menuPlaceholder="Project target">
-                    {projects.value?.map((project: ProjectData) => (
+                    {store.projects.map((project: ProjectData) => (
                         <MenuSelectItem
                             onClick={() =>
                             (addTaskProjectField.value =
@@ -36,7 +37,7 @@ export default function TasksQuickAddBar({
                 <Text>
                     {addTaskProjectField.value &&
                         "in: " +
-                        projects.value?.find(
+                        store.projects.find(
                             (p: ProjectData) =>
                                 p.project._id === addTaskProjectField.value,
                         ).project.title}

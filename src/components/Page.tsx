@@ -3,7 +3,6 @@ import type { ComponentChildren } from "preact";
 import Text from "#ui/Text";
 
 export default function Page({
-    auth = false,
     pageIcon,
     pageTitle,
     children,
