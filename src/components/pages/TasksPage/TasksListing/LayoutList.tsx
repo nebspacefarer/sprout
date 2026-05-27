@@ -42,29 +42,31 @@ export default function LayoutList({
 
 	return (
 		<div>
-			{store.tasks.map((task: Task) => {
-				switch (layout.value) {
-					default:
-						return (
-							<TaskContextMenu
-								trigger={
-									<ListTask
-										projectsSelected={projectsSelected}
-										task={task}
-										deleteTask={() => deleteTask(task)}
-										taskDialogOpen={taskDialogOpen}
-										editedTask={editedTask}
-									/>
-								}
-								deleteTask={() => deleteTask(task)}
-								task={task}
-								editedTask={editedTask}
-								projectsSelected={projectsSelected}
-								taskDialogOpen={taskDialogOpen}
-							/>
-						);
-				}
-			})}
+			{store.tasks
+				.sort((a, b) => (a.status > b.status ? 1 : -1))
+				.map((task: Task) => {
+					switch (layout.value) {
+						default:
+							return (
+								<TaskContextMenu
+									trigger={
+										<ListTask
+											projectsSelected={projectsSelected}
+											task={task}
+											deleteTask={() => deleteTask(task)}
+											taskDialogOpen={taskDialogOpen}
+											editedTask={editedTask}
+										/>
+									}
+									deleteTask={() => deleteTask(task)}
+									task={task}
+									editedTask={editedTask}
+									projectsSelected={projectsSelected}
+									taskDialogOpen={taskDialogOpen}
+								/>
+							);
+					}
+				})}
 		</div>
 	);
 }
