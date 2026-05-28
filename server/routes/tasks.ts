@@ -16,7 +16,7 @@ const tasks: FastifyPluginAsync = async (fastify): Promise<void> => {
 					task.userId !== request.auth?._id ||
 					!task.assigneesId?.includes(request.auth?._id as string)
 				) {
-					return;
+					tasks = [...tasks.filter((t) => t._id !== task._id)];
 				}
 
 				const taskUser = users.find((u) => u._id === task.userId);
@@ -30,7 +30,7 @@ const tasks: FastifyPluginAsync = async (fastify): Promise<void> => {
 					task.assignees.push(assigneeUser);
 				}
 
-				tasks = [...tasks.filter((t) => t._id === task._id)];
+				tasks = [...tasks.filter((t) => t._id !== task._id), task];
 			}
 
 			return reply.code(200).send({
