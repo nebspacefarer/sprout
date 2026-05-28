@@ -4,6 +4,7 @@ import { useEffect } from "preact/hooks";
 import { useParams } from "wouter";
 import Button from "#ui/Button";
 import Card from "#ui/Card";
+import Scroll from "#ui/Scroll";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { getProjectByIdOrName } from "#utils/fetch";
@@ -49,7 +50,9 @@ export default function ProjectPage() {
                                 className="h-px w-full bg-border"
                             />
 
-                            <TasksListing />
+                            <Scroll className="h-[25vh] w-[38vw]">
+                                <TasksListing />
+                            </Scroll>
                         </Card>
 
                         <Card className="flex-1" orientation="col">
@@ -65,7 +68,9 @@ export default function ProjectPage() {
                                 className="h-px w-full bg-border"
                             />
 
-                            <NotesListing />
+                            <Scroll className="h-[25vh] w-[38vw]">
+                                <NotesListing />
+                            </Scroll>
                         </Card>
                     </div>
                 </div>

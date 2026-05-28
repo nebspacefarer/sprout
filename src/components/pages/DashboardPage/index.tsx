@@ -14,6 +14,7 @@ import Avatar from "#ui/Avatar";
 import Button from "#ui/Button";
 import Card from "#ui/Card";
 import Link from "#ui/Link";
+import Scroll from "#ui/Scroll";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { getProjects, getTasks } from "#utils/fetch";
@@ -44,7 +45,7 @@ export default function DashboardPage() {
     return (
         <Page pageTitle="Dashboard" pageIcon={<IconDashboard />} auth>
             <Card className="flex-col justify-center">
-                <div className="flex items-center gap-xs font-semibold text-2xl">
+                <div className="flex items-center gap-xs font-semibold text-xl">
                     <IconButterfly size={32} />
                     <Text className="italic">Welcome back,</Text>
                     <div className="flex items-center gap-xs">
@@ -62,7 +63,7 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
-                <Text className="font-semibold text-xl">
+                <Text className="font-semibold text-lg italic">
                     {format(new Date(), " EEEE do, MMMM yyyy")}
                 </Text>
             </Card>
@@ -82,7 +83,9 @@ export default function DashboardPage() {
                         className="h-px w-full bg-border"
                     />
 
-                    <TasksListing />
+                    <Scroll className="h-[18vh] w-[38vw]">
+                        <TasksListing />
+                    </Scroll>
                 </Card>
 
                 <Card className="flex-1" orientation="col">
@@ -102,7 +105,9 @@ export default function DashboardPage() {
                         className="h-px w-full bg-border"
                     />
 
-                    <ProjectsListing />
+                    <Scroll className="h-[18vh] w-[38vw]">
+                        <ProjectsListing />
+                    </Scroll>
                 </Card>
             </div>
 
@@ -113,9 +118,11 @@ export default function DashboardPage() {
                         <Text>What you might have missed</Text>
                     </div>
 
-                    <Card className="w-full bg-surface" small>
-                        Projects changes...
-                    </Card>
+                    <Scroll className="h-[18vh] w-[80vw]">
+                        <Card className="w-full bg-surface" small>
+                            Projects changes...
+                        </Card>
+                    </Scroll>
                 </div>
             </Card>
         </Page>

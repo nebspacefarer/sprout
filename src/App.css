@@ -5,6 +5,6 @@
 body,
 #root,
 main {
-	@apply flex min-h-screen h-full min-w-screen w-full text-pretty bg-background important:text-foreground overflow-y-clip relative;
+	@apply flex min-h-screen h-screen min-w-screen w-full text-pretty bg-background important:text-foreground relative;
 	color: currentColor;
 }

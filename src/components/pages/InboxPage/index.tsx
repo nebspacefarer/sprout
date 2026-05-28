@@ -5,6 +5,7 @@ import { useEffect } from "preact/hooks";
 import Page from "src/components/Page";
 import Button from "#ui/Button";
 import Card from "#ui/Card";
+import Scroll from "#ui/Scroll";
 import Show from "#ui/Show";
 import Text from "#ui/Text";
 import { deleteInbox, getInbox, postInbox } from "#utils/fetch";
@@ -64,30 +65,32 @@ export default function InboxPage() {
             description: "Inbox entry deleted sucessfully.",
         });
 
-        store.inbox = [...store.inbox.filter((e) => e._id === data.entry._id)];
+        store.inbox = [...store.inbox.filter((e) => e._id !== entry._id)];
     }
 
     return (
         <Page auth pageIcon={<IconInbox />} pageTitle="Inbox">
             <EntryQuickAddBar entry={entry} addEntry={() => runPostInbox()} />
 
-            <Card>
-                {store.inbox.map((entry) => (
-                    <Card
-                        className="flex w-full items-center justify-between bg-surface"
-                        small
-                    >
-                        <Text> {entry.title}</Text>
-                        <Button onClick={() => runDeleteEntry(entry)}>
-                            <IconTrashX />
-                        </Button>
-                    </Card>
-                ))}
+            <Scroll className="h-[60vh]">
+                <Card className="flex flex-col">
+                    {store.inbox.map((entry) => (
+                        <Card
+                            className="flex w-full items-center justify-between bg-surface"
+                            small
+                        >
+                            <Text>{entry.title}</Text>
+                            <Button onClick={() => runDeleteEntry(entry)}>
+                                <IconTrashX />
+                            </Button>
+                        </Card>
+                    ))}
 
-                <Show when={store.inbox.length === 0}>
-                    <Text className="text-muted">No Inbox entry.</Text>
-                </Show>
-            </Card>
+                    <Show when={store.inbox.length === 0}>
+                        <Text className="text-muted">No Inbox entry.</Text>
+                    </Show>
+                </Card>
+            </Scroll>
         </Page>
     );
 }

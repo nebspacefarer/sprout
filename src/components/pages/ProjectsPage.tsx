@@ -2,6 +2,7 @@ import { IconCalendarTime, IconPlant } from "@tabler/icons-preact";
 import { format } from "date-fns";
 import { useEffect } from "preact/hooks";
 import { useLocation } from "wouter";
+import Scroll from "#ui/Scroll";
 import Show from "#ui/Show";
 import { getProjects } from "#utils/fetch";
 import { projectStatuses } from "#utils/status";
@@ -36,24 +37,26 @@ export default function ProjectsPage() {
 
     return (
         <Page auth pageIcon={<IconPlant />} pageTitle="Projects">
-            <div className="flex flex-wrap gap-sm">
-                {store.projects.map((project: ProjectData) => (
-                    <Button
-                        className="bg-unset text-left text-foreground"
-                        onClick={() =>
-                            navigate(
-                                `/projects/${textToParam(project.project.title)}`,
-                            )
-                        }
-                    >
-                        <ProjectCard project={project.project} />
-                    </Button>
-                ))}
+            <Scroll className="h-[60vh]">
+                <div className="flex flex-wrap gap-sm">
+                    {store.projects.map((project: ProjectData) => (
+                        <Button
+                            className="bg-unset text-left text-foreground"
+                            onClick={() =>
+                                navigate(
+                                    `/projects/${textToParam(project.project.title)}`,
+                                )
+                            }
+                        >
+                            <ProjectCard project={project.project} />
+                        </Button>
+                    ))}
 
-                <Show when={store.projects.length === 0}>
-                    <Text className="text-muted">No project... yet?</Text>
-                </Show>
-            </div>
+                    <Show when={store.projects.length === 0}>
+                        <Text className="text-muted">No project... yet?</Text>
+                    </Show>
+                </div>
+            </Scroll>
         </Page>
     );
 }

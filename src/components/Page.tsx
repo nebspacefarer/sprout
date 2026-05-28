@@ -3,27 +3,27 @@ import type { ComponentChildren } from "preact";
 import Text from "#ui/Text";
 
 export default function Page({
-    pageIcon,
-    pageTitle,
-    children,
+	pageIcon,
+	pageTitle,
+	children,
 }: {
-    auth?: boolean;
-    pageIcon: ComponentChildren;
-    pageTitle: string;
-    children: ComponentChildren;
+	auth?: boolean;
+	pageIcon: ComponentChildren;
+	pageTitle: string;
+	children: ComponentChildren;
 }) {
-    return (
-        <div className="flex flex-col gap-sm">
-            <div className="flex items-center gap-xs">
-                {pageIcon}
-                <Text className="w-fit border-primary border-b-3 font-semibold text-2xl">
-                    {pageTitle}
-                </Text>
-            </div>
+	return (
+		<div className="flex flex-col gap-sm">
+			<div className="flex h-fit items-center gap-xs">
+				{pageIcon}
+				<Text className="w-fit border-primary border-b-3 font-semibold text-2xl">
+					{pageTitle}
+				</Text>
+			</div>
 
-            <Separator orientation="horizontal" className="h-px bg-border" />
+			<Separator orientation="horizontal" className="h-px bg-border" />
 
-            {children}
-        </div>
-    );
+			{children}
+		</div>
+	);
 }

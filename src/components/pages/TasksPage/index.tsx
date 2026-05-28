@@ -5,6 +5,7 @@ import { IconListDetails } from "@tabler/icons-preact";
 import { useEffect } from "preact/hooks";
 import Page from "src/components/Page";
 import { useSearch } from "wouter";
+import Scroll from "#ui/Scroll";
 import { deleteTask, getProjects, postTask } from "#utils/fetch";
 import { useStore } from "#utils/store";
 import type { ProjectData, Task } from "#utils/types";
@@ -138,13 +139,15 @@ export default function TasksPage() {
                     createQuickTask={createQuickTask}
                 />
 
-                <TasksListing
-                    layout={layout}
-                    projectsSelected={projectsSelected}
-                    taskDialogOpen={taskDialogOpen}
-                    deleteTask={runDeleteTask}
-                    editedTask={editedTask}
-                />
+                <Scroll className="h-[60vh]">
+                    <TasksListing
+                        layout={layout}
+                        projectsSelected={projectsSelected}
+                        taskDialogOpen={taskDialogOpen}
+                        deleteTask={runDeleteTask}
+                        editedTask={editedTask}
+                    />
+                </Scroll>
             </div>
 
             <EditTaskDialog
