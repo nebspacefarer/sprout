@@ -8,3 +8,79 @@ main {
 	@apply flex min-h-screen h-screen min-w-screen w-full text-pretty bg-background important:text-foreground relative;
 	color: currentColor;
 }
+
+.dark-editor {
+	--baseBg: var(--colors-muted);
+	--basePageBg: var(--colors-surface);
+
+	color: white;
+}
+
+.mdxeditor-root-contenteditable {
+	@apply border border-border rounded-md;
+}
+
+.mdxeditor-toolbar {
+	background-color: unset;
+}
+
+.mdxeditor .cm-editor {
+	@apply bg-surface text-foreground;
+}
+
+.mdxeditor .cm-activeLineGutter {
+	@apply bg-border;
+}
+
+.mdxeditor .cm-gutterElement {
+	@apply text-primary;
+}
+
+.mdxeditor .ͼ16 {
+	@apply text-primary;
+}
+
+.mdxeditor h1 {
+	@apply text-[30px];
+}
+
+.mdxeditor h2 {
+	@apply text-[28px];
+}
+
+.mdxeditor h3 {
+	@apply text-[26px];
+}
+
+.mdxeditor h4 {
+	@apply text-[24px];
+}
+
+.mdxeditor h5 {
+	@apply text-[22px];
+}
+
+.mdxeditor h6 {
+	@apply text-[20px];
+}
+
+.mdxeditor ul li {
+	@apply list-disc ml-[20px] h-4;
+}
+
+.mdxeditor ol li {
+	@apply list-decimal ml-[20px] h-4;
+}
+
+.mdxeditor ._nestedListItem_6j9u9_66,
+.mdxeditor ._listItemUnchecked_6j9u9_81,
+.mdxeditor ._listItemChecked_6j9u9_80 {
+	@apply list-none focus-visible:outline-none h-4;
+}
+
+.mdxeditor ._listItemUnchecked_6j9u9_81 {
+	@apply flex items-center ml-0 before:top-unset;
+}
+.mdxeditor ._listItemChecked_6j9u9_80 {
+	@apply flex items-center ml-0 before:rounded-full before:bg-success before:top-unset after:top-unset;
+}

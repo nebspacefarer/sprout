@@ -15,10 +15,10 @@ export default function Card(props: CardProps) {
 			className={cn(
 				"flex items-center rounded-xl bg-crust",
 				props.small ? "px-sm py-xs" : "p-sm",
-				props.className,
 				props.orientation === "col"
 					? "flex-col items-start gap-1"
 					: "gap-sm",
+				props.className,
 			)}
 			style={props.style}
 		>

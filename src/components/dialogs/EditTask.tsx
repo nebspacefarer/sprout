@@ -1,3 +1,4 @@
+import { Toast } from "@base-ui/react";
 import { useDeepSignal } from "@deepsignal/preact";
 import { type Signal, useSignal } from "@preact/signals";
 import { IconCheck, IconClockPlay, IconFlag } from "@tabler/icons-preact";
@@ -35,6 +36,7 @@ interface DialogProps extends BaseHTMLAttributes<HTMLBaseElement> {
 
 export default function EditTaskDialog(props: DialogProps) {
     if (props.task.value !== null) {
+        const toastManager = Toast.useToastManager();
         const project = useSignal<Project>(null);
         const tagsItems = useSignal<LabelItem[]>([]);
 
@@ -138,6 +140,11 @@ export default function EditTaskDialog(props: DialogProps) {
             ];
 
             props.open.value = false;
+
+            toastManager.add({
+                description: "Note successfully edited!",
+                type: "success",
+            });
         }
 
         return (

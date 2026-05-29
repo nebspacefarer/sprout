@@ -172,3 +172,18 @@ export async function deleteTask(task: Task) {
         body: JSON.stringify({ _id: task._id }),
     });
 }
+
+// NOTES
+export async function getNotes() {
+    return await callApi(`${url}/notes`, {
+        credentials: "include",
+    });
+}
+
+export async function updateNote(dataNote) {
+    return await callApi(`${url}/notes`, {
+        method: "PUT",
+        credentials: "include",
+        body: JSON.stringify(dataNote),
+    });
+}
