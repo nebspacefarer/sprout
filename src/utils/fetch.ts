@@ -1,5 +1,5 @@
 import { navigate } from "wouter/use-browser-location";
-import type { Inbox, Project, Task } from "./types";
+import type { Inbox, Note, Project, Task } from "./types";
 
 const url = "/api";
 
@@ -174,9 +174,11 @@ export async function deleteTask(task: Task) {
 }
 
 // NOTES
-export async function getNotes() {
+export async function postNote(note: Note) {
     return await callApi(`${url}/notes`, {
+        method: "POST",
         credentials: "include",
+        body: JSON.stringify(note),
     });
 }
 
@@ -185,5 +187,13 @@ export async function updateNote(dataNote) {
         method: "PUT",
         credentials: "include",
         body: JSON.stringify(dataNote),
+    });
+}
+
+export async function deleteNote(note: Note) {
+    return await callApi(`${url}/notes`, {
+        method: "DELETE",
+        credentials: "include",
+        body: JSON.stringify(note),
     });
 }

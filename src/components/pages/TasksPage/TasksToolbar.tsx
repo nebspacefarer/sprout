@@ -59,8 +59,6 @@ export default function TasksToolbar({
 				),
 			];
 		}
-
-		console.log(projectsSelected.value);
 	}
 
 	return (

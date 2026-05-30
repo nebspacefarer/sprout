@@ -4,6 +4,7 @@ import { Route, Switch } from "wouter";
 import DashboardPage from "#pages/DashboardPage";
 import HomePage from "#pages/HomePage";
 import InboxPage from "#pages/InboxPage";
+import NotesPage from "#pages/NotesPage";
 import ProjectPage from "#pages/ProjectPage";
 import ProjectsPage from "#pages/ProjectsPage";
 import TasksPage from "#pages/TasksPage";
@@ -37,6 +38,7 @@ const App = () => {
 									component={ProjectPage}
 								/>
 								<Route path="/tasks" component={TasksPage} />
+								<Route path="/notes" component={NotesPage} />
 							</Switch>
 						</div>
 					</div>
